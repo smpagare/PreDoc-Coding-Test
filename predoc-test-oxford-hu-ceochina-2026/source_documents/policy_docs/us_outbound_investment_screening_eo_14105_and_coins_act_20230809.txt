@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: US Outbound Investment Screening (EO 14105 and COINS Act)
+Date Enacted: 2023-08-09
+Issuing Authority: Executive Office of the President (US) and US Congress
+Policy Type: Investment Screening
+Source URL: https://home.treasury.gov/policy-issues/international/outbound-investment-program
+
+Industries Affected: Technology, Enterprise Software & Semiconductors; Financial & Professional Services
+Firms Affected: Intel; NVIDIA; Qualcomm; JPMorgan Chase; Goldman Sachs; BlackRock; Citigroup
+
+Key Provisions:
+First-ever US program to screen and restrict outbound American investments into China, addressing intangible benefits of investment (know-how transfer, talent networks, market access). EO 14105 signed August 9, 2023; final Treasury rule published October 28, 2024; Outbound Investment Security Program (OISP) became operational January 2, 2025. The COINS Act, signed December 18, 2025, codified the program with statutory authority. Covers three critical technology sectors: semiconductors and microelectronics, quantum information technologies, and artificial intelligence. Transactions are divided into prohibited (advanced integrated circuits, quantum computing, military-applicable AI) and notifiable categories. Civil penalties reach up to $377,700 per violation or twice the transaction amount.
+
+Strategic Implication:
+Directly constrains US financial firms and investors from deploying capital into Chinese semiconductor, quantum, and AI sectors. BlackRock and other asset managers must screen China-focused portfolios for prohibited and notifiable transactions.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

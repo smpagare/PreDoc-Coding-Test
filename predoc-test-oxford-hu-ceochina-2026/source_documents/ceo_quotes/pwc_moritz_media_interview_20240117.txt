@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: PwC
+Executive: Bob Moritz, Global Chairman
+Source Type: Media Interview
+Date: 2024-01-17
+Source URL: https://www.chinadaily.com.cn/a/202401/17/WS65a6eaa2a3105f21a507c9f1.html
+
+Direct Quote:
+"We've seen over the last 20 to 25 years when China makes a determination to do something, the ability to scale that quickly comes to life, whereas other countries might not have that ability for whatever reason."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

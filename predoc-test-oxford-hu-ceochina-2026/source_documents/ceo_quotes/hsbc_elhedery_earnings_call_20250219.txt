@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: HSBC
+Executive: Georges Elhedery, Group CEO
+Source Type: Earnings Call
+Date: 2025-02-19
+Source URL: https://www.hsbc.com/news-and-views/news/media-releases/2025/hsbc-holdings-plc-annual-results-2024
+
+Direct Quote:
+"We are the leading international wealth provider in mainland China and in India. So we continue to invest in these areas."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

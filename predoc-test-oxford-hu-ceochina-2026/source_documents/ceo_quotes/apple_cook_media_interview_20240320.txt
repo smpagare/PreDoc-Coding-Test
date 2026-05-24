@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Apple
+Executive: Tim Cook, CEO
+Source Type: Media Interview
+Date: 2024-03-20
+Source URL: https://www.chinadaily.com.cn/a/202403/20/WS65fa936fa31082fc043bdbf3.html
+
+Direct Quote:
+"There's no supply chain in the world that's more critical to us than China."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

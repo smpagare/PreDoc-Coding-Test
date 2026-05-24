@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Microsoft
+Executive: Satya Nadella, Chairman & CEO
+Source Type: Conference / Speech
+Date: 2023-11-15
+Source URL: https://www.silicon.co.uk/cloud/datacenter/china-not-a-focus-for-microsoft-satya-nadella-539845
+
+Direct Quote:
+"We are mostly focused on the global market ex-China. Chinese multinationals operating outside of China are among our bigger AI customers."
+
+Interpreted Stance: Hedging
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

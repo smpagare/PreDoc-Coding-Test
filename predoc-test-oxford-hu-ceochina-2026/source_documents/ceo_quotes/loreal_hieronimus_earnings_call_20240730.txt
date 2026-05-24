@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: L'Oreal
+Executive: Nicolas Hieronimus, CEO
+Source Type: Earnings Call
+Date: 2024-07-30
+Source URL: https://www.cosmeticsdesign-asia.com/Article/2024/08/12/l-oreal-paris-see-huge-opportunity-in-china-as-consumers-seek-value-for-money/
+
+Direct Quote:
+"We'd love to have a growing China, but we are not dependent upon a growing China."
+
+Interpreted Stance: Hedging
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

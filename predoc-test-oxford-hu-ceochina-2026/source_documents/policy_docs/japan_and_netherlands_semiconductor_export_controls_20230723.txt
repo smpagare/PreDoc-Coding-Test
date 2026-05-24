@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: Japan and Netherlands Semiconductor Export Controls
+Date Enacted: 2023-07-23
+Issuing Authority: Japanese Ministry of Economy, Trade and Industry; Dutch Government
+Policy Type: Trade Controls & Export Restrictions
+Source URL: https://www.meti.go.jp/english/speeches/press_conferences/2023/0331001.html
+
+Industries Affected: Technology, Enterprise Software & Semiconductors
+Firms Affected: Intel; NVIDIA; Qualcomm; Bosch; Siemens (indirect)
+
+Key Provisions:
+Coordinated semiconductor manufacturing equipment export controls implemented by Japan and the Netherlands to align with US October 2022 restrictions. Japan: announced March 31, 2023; effective July 23, 2023; expanded in April 2024 and January 2025. Netherlands: announced March 8, 2023; effective September 1, 2023; expanded September 2024, December 2024, and January 2025. Japan's METI added 23 types of semiconductor equipment requiring export licenses across six categories. Netherlands controls primarily target ASML; all EUV systems have been blocked since 2019, DUV immersion systems progressively restricted. The 2024 expansion also required licenses for servicing, spare parts, and software updates for restricted systems already sold to China.
+
+Strategic Implication:
+Chinese customers engaged in massive equipment stockpiling before controls tightened, with ASML's China revenue hitting 49% of quarterly revenue in Q2 2024. Equipment-dependent semiconductor firms face progressive supply chain disruption.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: China NEV Dual-Credit Policy
+Date Enacted: 2017-09-27
+Issuing Authority: Ministry of Industry and Information Technology of China
+Policy Type: Industrial Policy
+Source URL: https://www.iea.org/policies/14779-dual-credit-system
+
+Industries Affected: Automotive, EV & Advanced Manufacturing
+Firms Affected: Tesla; BMW Group; Volkswagen Group; Mercedes-Benz Group; Toyota; Stellantis; Bosch
+
+Key Provisions:
+Requires passenger car manufacturers and importers to meet both Corporate Average Fuel Consumption (CAFC) targets and New Energy Vehicle (NEV) credit quotas. NEV credit ratios escalated from 10% (2019) to 18% (2023) to 38% (2025) to 48% (2026) to 58% (2027). Surplus NEV credits can offset CAFC deficits but CAFC credits cannot offset NEV deficits. Major amendments in June 2020 (Phase 2), July 2023 (Phase 3), and November 2025 (Phase 4).
+
+Strategic Implication:
+Tesla benefits as a net credit seller, while foreign joint ventures (VW, Toyota) face deficits forcing accelerated NEV production or credit purchases. NEV penetration surged past 40% by 2024-2025, intensifying pressure on lagging foreign OEMs.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Stellantis
+Executive: Carlos Tavares, CEO
+Source Type: Official Statement
+Date: 2023-10-26
+Source URL: https://www.stellantis.com/en/news/press-releases/2023/october/stellantis-to-become-a-strategic-shareholder-of-leapmotor-with-1-5-billion-investment-and-bolster-leapmotor-s-global-electric-vehicle-business
+
+Direct Quote:
+"As consolidation unfolds among the capable electric vehicles start-ups in China, it becomes increasingly apparent that a handful of efficient and agile new generation EV players, like Leapmotor, will come to dominate the mainstream segments in China."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

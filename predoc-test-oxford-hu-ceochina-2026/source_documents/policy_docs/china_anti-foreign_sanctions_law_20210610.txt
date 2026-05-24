@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: China Anti-Foreign Sanctions Law
+Date Enacted: 2021-06-10
+Issuing Authority: Standing Committee of the National People's Congress
+Policy Type: Localization & Compliance Requirements
+Source URL: https://www.chinalawtranslate.com/en/counteringforeignsanctions/
+
+Industries Affected: All industries
+Firms Affected: All firms on assigned list
+
+Key Provisions:
+Blocking statute enabling China to impose countermeasures against foreign sanctions it deems discriminatory, while prohibiting individuals and entities in China from complying with those foreign sanctions. Comprehensive implementing regulations were issued on March 23, 2025 (State Council Order No. 803). The Ministry of Foreign Affairs maintains a Countermeasure List (currently 59 foreign entities and 63 individuals). Countermeasures include visa denials, asset freezing, and transaction prohibitions. The 2025 implementing regulations added an anti-litigation provision and detailed procedures for asset seizure.
+
+Strategic Implication:
+Creates a compliance dilemma: complying with US/EU sanctions risks legal liability in China, while non-compliance risks sanctions violations at home. Financial firms (JPMorgan, HSBC, Citigroup) are most exposed.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: Made in China 2025
+Date Enacted: 2015-05-08
+Issuing Authority: State Council of China
+Policy Type: Industrial Policy
+Source URL: https://english.www.gov.cn/2016special/madeinchina2025/
+
+Industries Affected: Automotive, EV & Advanced Manufacturing; Technology, Enterprise Software & Semiconductors
+Firms Affected: Tesla; BMW Group; Volkswagen Group; Mercedes-Benz Group; Toyota; Siemens; Intel; Qualcomm; NVIDIA; Bosch
+
+Key Provisions:
+National strategic plan targeting 10 sectors including NEVs, robotics, aerospace, and semiconductors. Targets 70% domestic content in core components by 2025. Operates through government guidance funds, R&D grants, preferential financing, and talent recruitment programs. Total state funding estimated at over $1.4 trillion. Provoked the US Section 301 investigation in 2018.
+
+Strategic Implication:
+Creates competitive pressure on foreign manufacturers as domestic firms receive preferential subsidies and procurement; Chinese brands held 62% of global EV market share by 2024. Semiconductor and automotive firms face the steepest disadvantage.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

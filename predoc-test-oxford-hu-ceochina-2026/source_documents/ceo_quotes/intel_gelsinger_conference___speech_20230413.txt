@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Intel
+Executive: Pat Gelsinger, CEO
+Source Type: Conference / Speech
+Date: 2023-04-13
+Source URL: https://fortune.com/2023/04/13/intel-ceo-pat-gelsinger-china-important-market-chip-controls/
+
+Direct Quote:
+"China is one of the world's largest markets, and also one of Intel's most important markets. Intel's presence in China is very important."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

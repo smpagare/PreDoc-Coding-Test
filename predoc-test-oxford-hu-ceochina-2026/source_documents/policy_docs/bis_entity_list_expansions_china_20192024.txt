@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: BIS Entity List Expansions (China)
+Date Enacted: 2019-2024
+Issuing Authority: US Bureau of Industry and Security
+Policy Type: Trade Controls & Export Restrictions
+Source URL: https://www.bis.gov/press-release/commerce-further-restricts-chinas-artificial-intelligence-advanced-computing-capabilities
+
+Industries Affected: Technology, Enterprise Software & Semiconductors
+Firms Affected: Intel; NVIDIA; Qualcomm; Apple (indirect via suppliers)
+
+Key Provisions:
+Progressive restriction tool requiring US government licenses before any US-origin items can be exported to listed entities. Key milestones: Huawei added May 2019; SMIC added December 2020; landmark semiconductor export controls issued October 7, 2022 (restricting advanced computing chips, semiconductor manufacturing equipment, and US person support for Chinese chip development); loopholes tightened October 2023; 140 entities added December 2024. As of March 2025, over 1,065 Chinese entities were on the Entity List, nearly one-third of all entries.
+
+Strategic Implication:
+NVIDIA's China revenue dropped from 26% to ~13% of total with a $5.5 billion inventory charge in 2025; semiconductor firms face progressive market access loss. Huawei developed domestic alternatives, demonstrating limits of export controls.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: JPMorgan Chase
+Executive: Jamie Dimon, Chairman & CEO
+Source Type: Conference / Speech
+Date: 2024-01-17
+Source URL: https://fortune.com/2024/01/17/jamie-dimon-davos-hunky-dory-markets-mistake-china-risk-reward-changed-dramatically/
+
+Direct Quote:
+"The risk-reward has changed dramatically. [Chinese officials are] trying to make sure that they're open for business, that they're being fair to foreign companies."
+
+Interpreted Stance: De-risking
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

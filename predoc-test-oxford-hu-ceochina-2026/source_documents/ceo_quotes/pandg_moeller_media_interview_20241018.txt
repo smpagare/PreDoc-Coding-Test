@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: P&G
+Executive: Jon Moeller, Chairman, President & CEO
+Source Type: Media Interview
+Date: 2024-10-18
+Source URL: https://www.pymnts.com/earnings/2024/procter-gamble-cfo-sees-right-price-levels-in-us-market-amid-global-challenges/
+
+Direct Quote:
+"After spending four days in China, Moeller said he left 'more excited than when I went.' He expressed confidence in the long-term China consumer opportunity."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

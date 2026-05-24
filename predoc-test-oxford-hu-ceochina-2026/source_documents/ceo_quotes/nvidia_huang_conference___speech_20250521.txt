@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: NVIDIA
+Executive: Jensen Huang, Founder & CEO
+Source Type: Conference / Speech
+Date: 2025-05-21
+Source URL: https://www.theregister.com/2025/05/21/jensen_huang_h20_ban_criticism/
+
+Direct Quote:
+"Huang called U.S. export controls on AI chips to China 'a failure' and said Nvidia had lost significant China market share following successive export restriction policies."
+
+Interpreted Stance: De-risking
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

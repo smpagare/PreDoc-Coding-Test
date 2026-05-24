@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: BMW Group
+Executive: Oliver Zipse, Chairman of the Board of Management
+Source Type: Earnings Call
+Date: 2024-05-08
+Source URL: https://www.press.bmwgroup.com/global/article/detail/T0441797EN
+
+Direct Quote:
+"We are confident about long-term economic prospects in China. We are therefore comprehensively preparing our joint venture BBA's production site in Shenyang for future vehicle models."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

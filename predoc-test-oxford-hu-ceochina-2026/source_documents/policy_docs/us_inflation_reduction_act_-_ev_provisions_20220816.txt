@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: US Inflation Reduction Act - EV Provisions
+Date Enacted: 2022-08-16
+Issuing Authority: US Congress
+Policy Type: Industrial Policy
+Source URL: https://www.congress.gov/bill/117th-congress/house-bill/5376
+
+Industries Affected: Automotive, EV & Advanced Manufacturing
+Firms Affected: Tesla; BMW Group; Volkswagen Group; Mercedes-Benz Group; Toyota; Stellantis
+
+Key Provisions:
+The IRA (P.L. 117-169) restructured EV tax credits to build domestic and allied supply chains while systematically excluding Chinese companies through Foreign Entity of Concern (FEOC) rules. FEOC final rules took effect July 5, 2024. Credits were terminated effective October 1, 2025 by the One Big Beautiful Bill Act. Provided up to $7,500 in consumer EV tax credits split between two $3,750 components (critical minerals sourcing and battery manufacturing), while excluding entities owned or controlled by China, Russia, Iran, or North Korea. FEOC entities were defined using a 25% threshold for ownership, voting rights, or board seats.
+
+Strategic Implication:
+FEOC rules effectively lock Chinese battery suppliers (CATL, BYD) out of the US EV subsidy ecosystem, forcing automakers to restructure supply chains away from Chinese components to qualify for tax credits.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

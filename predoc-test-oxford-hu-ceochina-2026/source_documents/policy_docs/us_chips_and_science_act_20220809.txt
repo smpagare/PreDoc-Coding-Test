@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: US CHIPS and Science Act
+Date Enacted: 2022-08-09
+Issuing Authority: US Congress
+Policy Type: Industrial Policy
+Source URL: https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/08/09/fact-sheet-chips-and-science-act-will-lower-costs-create-jobs-strengthen-supply-chains-and-counter-china/
+
+Industries Affected: Technology, Enterprise Software & Semiconductors
+Firms Affected: Intel; NVIDIA; Qualcomm
+
+Key Provisions:
+Landmark legislation (P.L. 117-167) authorizing approximately $280 billion in new funding, with $52.7 billion specifically appropriated for semiconductor manufacturing, R&D, and workforce development. The $39 billion Manufacturing Incentive Fund provides direct subsidies for fab construction. Guardrails prohibit recipients from expanding advanced chip capacity in China through 10-year guardrails. Major awards include: TSMC Arizona ($6.6 billion direct plus $5 billion in loans for three fabs), Intel ($7.86 billion plus $3 billion for a Secure Enclave), Samsung ($4.745 billion), Micron ($6.165 billion), and GlobalFoundries ($1.5 billion). As of July 2025, $30.9 billion had been awarded across 40 projects.
+
+Strategic Implication:
+Intel benefits from direct manufacturing subsidies but 10-year guardrails prohibit advanced chip capacity expansion in China, creating an explicit trade-off between US subsidies and China market access for semiconductor firms.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

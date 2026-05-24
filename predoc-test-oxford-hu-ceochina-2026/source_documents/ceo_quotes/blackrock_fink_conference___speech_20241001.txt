@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: BlackRock
+Executive: Larry Fink, Chairman & CEO
+Source Type: Conference / Speech
+Date: 2024-10-01
+Source URL: https://www.ukrainerebuildnews.com/blackrock-ceo-calls-on-western-firms-to-reconsider-china-ties/
+
+Direct Quote:
+"We have businesses in China. I'm sure everybody here has some businesses in China. We all have to re-evaluate that. Russia's biggest supporter and fundamental supporter of the Russian economy is China. And that has to be at least discussed."
+
+Interpreted Stance: De-risking
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

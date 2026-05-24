@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: China Foreign Investment Law
+Date Enacted: 2020-01-01
+Issuing Authority: National People's Congress of China
+Policy Type: Regulatory Reform
+Source URL: https://en.ndrc.gov.cn/policies/202105/t20210527_1281403.html
+
+Industries Affected: All industries
+Firms Affected: All firms on assigned list
+
+Key Provisions:
+Unified law replacing three prior statutes (Sino-Foreign Equity JV Law, Wholly Foreign-Owned Enterprises Law, and Cooperative JV Law) dating from 1979-1988. Adopted March 15, 2019; effective January 1, 2020. Establishes pre-establishment national treatment via a negative list approach. Explicitly prohibits forced technology transfer. Includes a national security review mechanism for foreign investments. The negative list has been steadily shortened from 190 items (2013) to 29 items (2024 edition, effective November 1, 2024). The 2024 revision achieved zero foreign investment restrictions in manufacturing.
+
+Strategic Implication:
+Despite structural improvements including zero manufacturing restrictions by 2024, balance-of-payments FDI plummeted to $4.5 billion in 2024 (lowest since 1991), driven by overlapping regulatory burdens and geopolitical tensions affecting all firms.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

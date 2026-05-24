@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: China Generative AI Interim Measures
+Date Enacted: 2023-08-15
+Issuing Authority: Cyberspace Administration of China (with six co-regulators)
+Policy Type: Data, AI & Cybersecurity Regulation
+Source URL: https://www.cac.gov.cn/2023-07/13/c_1690898326795531.htm
+
+Industries Affected: Technology, Enterprise Software & Semiconductors
+Firms Affected: Microsoft; SAP; IBM; NVIDIA; Apple
+
+Key Provisions:
+China's first comprehensive regulations on generative AI services, jointly published by the CAC, Ministry of Science and Technology, MIIT, Ministry of Public Security, and three other regulators. Effective August 15, 2023. Requires security assessments and algorithm registration before launching generative AI services with public opinion attributes or social mobilization capabilities. Training data must be lawfully obtained with measures to improve accuracy and diversity. Generated content must not violate laws or incite subversion of state power, separatism, or terrorism. Providers bear responsibility for the legality of generated outputs. As of early 2025, over 346 generative AI services had been filed with the CAC.
+
+Strategic Implication:
+Creates a regulatory moat favoring domestic AI providers (Baidu, Alibaba) who have completed registration, while foreign tech firms (Microsoft, IBM) face content compliance requirements that may conflict with global product standards.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

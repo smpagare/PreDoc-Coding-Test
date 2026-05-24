@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: China Data Security Law
+Date Enacted: 2021-09-01
+Issuing Authority: Standing Committee of the National People's Congress
+Policy Type: Data, AI & Cybersecurity Regulation
+Source URL: http://www.npc.gov.cn/englishnpc/c2759/c23934/202112/t20211209_385109.html
+
+Industries Affected: Technology, Enterprise Software & Semiconductors; Financial & Professional Services; Healthcare & Consumer
+Firms Affected: Apple; Microsoft; SAP; IBM; JPMorgan Chase; Goldman Sachs; HSBC; BlackRock; Citigroup; PwC; Deloitte; Pfizer; Johnson & Johnson
+
+Key Provisions:
+Comprehensive law regulating all data processing activities within China and extraterritorially. Part of a three-pillar framework alongside the Cybersecurity Law (2017) and the PIPL (2021). Data is classified into three tiers: national core data (strictest regulation, fines up to RMB 10 million), important data (enhanced obligations, fines up to RMB 5 million), and general data (baseline requirements). Article 36 expressly prohibits providing data stored in China to foreign judicial or law enforcement bodies without Chinese government approval. The 2025 regulations clarified that personal data of more than 10 million individuals constitutes important data.
+
+Strategic Implication:
+Imposes significant compliance costs on foreign firms handling large data volumes, particularly tech and financial firms. Creates conflict with GDPR and US legal requirements for cross-border data disclosure.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

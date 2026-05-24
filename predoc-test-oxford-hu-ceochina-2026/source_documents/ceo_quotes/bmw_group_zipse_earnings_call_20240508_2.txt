@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: BMW Group
+Executive: Oliver Zipse, Chairman of the Board of Management
+Source Type: Earnings Call
+Date: 2024-05-08
+Source URL: https://www.press.bmwgroup.com/global/article/detail/T0441797EN
+
+Direct Quote:
+"In late April, we signed a Memorandum of Understanding to this effect in Shenyang, for investments totalling around 2.5 billion euros."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

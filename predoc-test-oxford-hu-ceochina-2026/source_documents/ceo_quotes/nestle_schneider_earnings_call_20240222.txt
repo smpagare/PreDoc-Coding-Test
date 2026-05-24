@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Nestle
+Executive: Mark Schneider, CEO
+Source Type: Earnings Call
+Date: 2024-02-22
+Source URL: https://www.nasdaq.com/press-release/nestle-reports-full-year-results-for-2023-2024-02-22
+
+Direct Quote:
+"Nestle reported low single-digit growth in China with market share gains in soluble coffee and pet foods. Schneider highlighted an emerging 'coffee China' consumer trend."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: NVIDIA
+Executive: Jensen Huang, Founder & CEO
+Source Type: Earnings Call
+Date: 2025-05-28
+Source URL: https://www.cnbc.com/2025/05/28/nvidia-ceo-hammers-chip-controls-that-effectively-closed-china-.html
+
+Direct Quote:
+"The $50 billion China market is effectively closed to U.S. industry. We are taking a multibillion-dollar writeoff on inventory that cannot be sold or repurposed."
+
+Interpreted Stance: De-risking
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

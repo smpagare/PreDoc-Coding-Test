@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: EU Foreign Subsidies Regulation
+Date Enacted: 2023-07-12
+Issuing Authority: European Commission
+Policy Type: Financial & Capital Market Regulation
+Source URL: https://competition-policy.ec.europa.eu/foreign-subsidies-regulation_en
+
+Industries Affected: Automotive, EV & Advanced Manufacturing
+Firms Affected: Tesla; BMW Group; Volkswagen Group; Mercedes-Benz Group; Stellantis
+
+Key Provisions:
+EU Regulation 2022/2560 giving the European Commission power to investigate and address distortive foreign subsidies. Adopted December 14, 2022; entered into force January 12, 2023; fully applicable July 12, 2023 (ex officio tool) and October 12, 2023 (notification obligations). Provides three tools: an ex officio review (no thresholds), mandatory notification for M&A where the target generates EU turnover of at least EUR 500 million with foreign financial contributions of at least EUR 50 million, and mandatory notification for public procurement bids where the contract exceeds EUR 250 million with contributions exceeding EUR 4 million per third country. Penalties reach up to 10% of global turnover.
+
+Strategic Implication:
+All in-depth investigations to date have involved Chinese companies, making enforcement practically China-focused. European automakers face indirect effects as Chinese EV competitors (BYD, CRRC) are scrutinized on subsidized market entry.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

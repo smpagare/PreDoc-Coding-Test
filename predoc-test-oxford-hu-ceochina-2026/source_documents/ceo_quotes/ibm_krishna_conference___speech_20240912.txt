@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: IBM
+Executive: Arvind Krishna, Chairman & CEO
+Source Type: Conference / Speech
+Date: 2024-09-12
+Source URL: https://pandaily.com/ibm-the-closure-of-the-china-rd-department-is-final-and-irreversible/
+
+Direct Quote:
+"Krishna announced IBM's closure of its China R&D units (CDL and CSL) is final and irreversible. He stated IBM needs to focus on 'strategic hubs' that 'can accommodate teams of thousands,' listing US, India, Canada, Poland, and Ireland, explicitly excluding China."
+
+Interpreted Stance: De-risking
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Pfizer
+Executive: Albert Bourla, Chairman & CEO
+Source Type: Conference / Speech
+Date: 2023-10-12
+Source URL: https://fortune.com/2023/10/12/pfizer-ceo-albert-bourla-tap-china-science-cancer-treatment-covid-vaccine/
+
+Direct Quote:
+"The good thing with the Chinese government is that they are very strategic about their priorities. The best and safest way to be able to have an impact [is] when the efforts of your company and the efforts of the government are all aligned."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: SAP
+Executive: Christian Klein, CEO
+Source Type: Conference / Speech
+Date: 2022-11-10
+Source URL: https://www.chinadaily.com.cn/a/202211/10/WS636ca367a310491754328f12.html
+
+Direct Quote:
+"China will continue to serve as a key growth market and driver of innovation for the world. We are excited about what we can achieve in the country, and we are proud to contribute to China's continued economic, social, and sustainable development for the next 30 years and beyond."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

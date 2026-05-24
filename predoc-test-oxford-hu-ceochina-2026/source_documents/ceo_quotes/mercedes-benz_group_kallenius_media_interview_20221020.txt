@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Mercedes-Benz Group
+Executive: Ola Kallenius, CEO
+Source Type: Media Interview
+Date: 2022-10-20
+Source URL: https://newseu.cgtn.com/news/2022-10-20/Mercedez-Benz-CEO-China-is-a-home-away-from-home--1eguyPLS7jG/index.html
+
+Direct Quote:
+"China is a home away from home. We're increasing our footprint in China. In China for China, but also in China for the world."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

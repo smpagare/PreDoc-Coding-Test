@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Siemens
+Executive: Roland Busch, President & CEO
+Source Type: Media Interview
+Date: 2023-06-20
+Source URL: https://english.news.cn/20230620/f14a28df0fb14fe4a3c667704e157e05/c.html
+
+Direct Quote:
+"China is the world's largest industrial market, and Siemens highly values the opportunities offered by the development of the Chinese market."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

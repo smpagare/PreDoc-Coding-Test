@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: China Personal Information Protection Law (PIPL)
+Date Enacted: 2021-11-01
+Issuing Authority: Standing Committee of the National People's Congress
+Policy Type: Data, AI & Cybersecurity Regulation
+Source URL: https://en.spp.gov.cn/2021-12/29/c_948419.htm
+
+Industries Affected: All industries
+Firms Affected: Apple; Microsoft; SAP; IBM; JPMorgan Chase; HSBC; Citigroup; Pfizer; P&G; Nestle; L'Oreal; Shiseido
+
+Key Provisions:
+China's dedicated personal data protection statute with extraterritorial reach. Unlike the GDPR, the PIPL does not recognize 'legitimate interest' as a standalone legal basis. Cross-border transfers must follow one of three pathways: CAC security assessment (required for data of 1 million+ individuals), standard contractual clauses, or PIP certification. Penalties reach up to RMB 50 million or 5% of annual revenue for severe violations. Mandatory compliance audits were introduced effective May 1, 2025; processors handling data of 10 million+ individuals must audit at least every two years.
+
+Strategic Implication:
+Consumer-facing firms (P&G, Nestle, L'Oreal) face high compliance costs for customer data management and cross-border transfers. Mandatory compliance audits from 2025 increase ongoing regulatory burden for all firms processing data of 10 million+ individuals.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

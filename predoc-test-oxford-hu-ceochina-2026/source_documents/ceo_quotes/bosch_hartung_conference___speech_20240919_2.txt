@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Bosch
+Executive: Stefan Hartung, Chairman of the Board of Management
+Source Type: Conference / Speech
+Date: 2024-09-19
+Source URL: http://en.people.cn/n3/2024/0919/c90000-20220589.html
+
+Direct Quote:
+"China is a very important market for us. We have achieved significant success, and our investments continue to grow."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

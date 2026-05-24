@@ -1,0 +1,19 @@
+Policy Reference Document
+=========================
+Policy Name: China Revised Anti-Espionage Law
+Date Enacted: 2023-07-01
+Issuing Authority: Standing Committee of the National People's Congress
+Policy Type: Localization & Compliance Requirements
+Source URL: http://en.npc.gov.cn.cdurl.cn/2023-04/26/c_954841.htm
+
+Industries Affected: All industries
+Firms Affected: All firms on assigned list, particularly consulting and professional services firms (PwC; Deloitte)
+
+Key Provisions:
+Comprehensive revision of China's 2014 Counter-Espionage Law. Revised version passed April 26, 2023; effective July 1, 2023. Broadened definition of espionage beyond state secrets to encompass all documents, data, materials, and items related to national security and interests. Added cyber espionage provisions. Security organs gained power to inspect electronic devices, summon individuals for questioning up to 24 hours, access financial records, impose exit bans, and seal or freeze property.
+
+Strategic Implication:
+Chilling effect on due diligence, consulting, and research activities; raids on Mintz Group, Bain, and Capvision in early 2023 signaled heightened enforcement risk. Professional services and advisory firms (PwC, Deloitte) face disproportionate exposure.
+
+Note: This file serves as a structured reference for the policy identified above.
+The full official text or authoritative summary is available at the source URL.

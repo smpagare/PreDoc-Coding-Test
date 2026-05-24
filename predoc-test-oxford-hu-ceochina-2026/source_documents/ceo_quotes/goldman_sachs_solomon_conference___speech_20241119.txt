@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Goldman Sachs
+Executive: David Solomon, Chairman & CEO
+Source Type: Conference / Speech
+Date: 2024-11-19
+Source URL: https://english.dotdotnews.com/a/202411/20/AP673d453de4b079cd3fbe21fe.html
+
+Direct Quote:
+"Messages around the ability to both attract capital and have capital come in and come out are very, very important for global investors. Solomon noted persistent investor concerns about difficulty withdrawing capital from China after five years of commitments."
+
+Interpreted Stance: Hedging
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

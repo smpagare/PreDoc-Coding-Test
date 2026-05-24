@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Apple
+Executive: Tim Cook, CEO
+Source Type: Conference / Speech
+Date: 2024-10-24
+Source URL: https://9to5mac.com/2024/10/24/apple-set-to-increase-china-supply-chain-investment-following-tim-cooks-government-visit/
+
+Direct Quote:
+"Apple will continue to increase its investment in China. Cook committed to increased supply chain investment during a government meeting in Beijing."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

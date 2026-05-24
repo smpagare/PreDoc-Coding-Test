@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Citigroup
+Executive: Jane Fraser, CEO
+Source Type: Conference / Speech
+Date: 2023-06
+Source URL: https://fortune.com/2023/06/22/citigroup-ceo-jane-fraser-the-next-china-is-china/
+
+Direct Quote:
+"I think the next China is...China. They're very clear they've got a lot of challenges. But still I think it's tough to look at innovation in that economy and not feel they've got further to go."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

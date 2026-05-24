@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Volkswagen Group
+Executive: Oliver Blume, CEO
+Source Type: Conference / Speech
+Date: 2025-03-11
+Source URL: https://www.marketscreener.com/quote/stock/VOLKSWAGEN-AG-436737/news/Volkswagen-Speech-at-the-2025-Annual-Media-Conference-by-Oliver-Blume-49292764/
+
+Direct Quote:
+"We have realigned our software activities and strengthened the team with new partners: Xpeng for China and our US partner Rivian for the other world regions."
+
+Interpreted Stance: Optimistic Growth
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

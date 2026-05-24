@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Johnson & Johnson
+Executive: Joaquin Duato, Chairman & CEO
+Source Type: Earnings Call
+Date: 2024-07-17
+Source URL: https://www.fool.com/earnings/call-transcripts/2024/07/17/johnson-johnson-jnj-q2-2024-earnings-call-transcri/
+
+Direct Quote:
+"We were one of the first companies that started to operate in China, and we've been in China for decades. We have a history of having constructive engagements with China."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Toyota Motor Corporation
+Executive: Koji Sato, President & CEO
+Source Type: Conference / Speech
+Date: 2023-04-21
+Source URL: https://electrek.co/2023/04/21/toyota-aims-to-keep-up-in-chinas-ev-market-with-new-urgency/
+
+Direct Quote:
+"We need to increase our speed and efforts to firmly meet the customer expectations in the Chinese market."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

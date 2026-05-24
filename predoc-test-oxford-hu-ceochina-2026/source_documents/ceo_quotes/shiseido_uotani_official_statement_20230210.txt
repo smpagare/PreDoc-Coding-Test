@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Shiseido
+Executive: Masahiko Uotani, Chairman & CEO
+Source Type: Official Statement
+Date: 2023-02-10
+Source URL: https://corp.shiseido.com/en/news/detail.html?n=00000000003560
+
+Direct Quote:
+"Uotani reaffirmed the 'SHIFT 2025 and Beyond' strategy with China identified as a key regional growth area, committing to brand portfolio expansion and development of new business areas in the Chinese market."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.

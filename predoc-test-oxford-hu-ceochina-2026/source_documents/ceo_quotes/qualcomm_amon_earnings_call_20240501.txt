@@ -1,0 +1,15 @@
+Source Reference Document
+========================
+Company: Qualcomm
+Executive: Cristiano Amon, President & CEO
+Source Type: Earnings Call
+Date: 2024-05-01
+Source URL: https://www.fool.com/earnings/call-transcripts/2024/05/01/qualcomm-qcom-q2-2024-earnings-call-transcript/
+
+Direct Quote:
+"We have not seen signs of weakness in the Android premium market in China, especially with our OEMs. A lot of the strength really coming from premium devices from Xiaomi, Honor, OPPO, OnePlus, Vivo."
+
+Interpreted Stance: Cautious Engagement
+
+Note: This file serves as a structured reference for the quote extracted from the
+source listed above. The full original transcript/document is available at the URL.
