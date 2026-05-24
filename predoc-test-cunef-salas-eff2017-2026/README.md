@@ -50,14 +50,21 @@ The task uses a cleaned version of the EFF 2017 (provided by the PI) and covers 
 | log/interaction_log_full.md | AI assistance log, markdown |
 | log/interaction_log_full.pdf | AI assistance log, PDF |
 
-## Data
+## Data and PI materials
 
-Not redistributed in this repo. The task used:
+The following are not redistributed on GitHub. Available on request from the author:
 
-* `eff.dta`, a cleaned version of EFF 2017 prepared by the PI. The original survey is published by the Bank of Spain at `https://www.bde.es/wbe/en/estadisticas/encuesta-financiera-las-familias-eff/`.
-* `secondlang_prob.dta`, an auxiliary file provided by the PI with the probability of speaking a second language by education level.
+| File | Description |
+|------|-------------|
+| `eff.dta` | Cleaned EFF 2017 microdata prepared by the PI. The original survey is published by the Bank of Spain at https://www.bde.es/wbe/en/estadisticas/encuesta-financiera-las-familias-eff/ |
+| `secondlang_prob.dta` | Auxiliary file with the probability of speaking a second language by education level, provided by the PI |
+| `task_instructions.pdf` | The PI task brief |
+| `codebook.pdf` | EFF variable codebook provided by the PI |
+| `eff_user_guide_2017.pdf` | EFF user guide provided by the PI |
 
-Anyone with the same files can rerun the pipeline; results in this repo correspond to the PI's cleaned version, not the public Bank of Spain release.
+Anyone with the cleaned `eff.dta` and `secondlang_prob.dta` can rerun the pipeline; results in this repo correspond to the PI cleaned version, not the public Bank of Spain release.
+
+Contact: siddhantpagare2014@gmail.com
 
 ## How to reproduce
 

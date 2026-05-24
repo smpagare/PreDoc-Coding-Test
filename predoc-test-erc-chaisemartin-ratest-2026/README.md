@@ -50,14 +50,21 @@ The test asks the candidate to complete four of seven exercises, with at least o
 | exercise7/commit_review.tex | Writeup for exercise 7 |
 | ai_transcripts/exercise1_monte_carlo.md | AI assistance log for exercise 1 |
 
-## Data
+## Data and PI materials
 
-Not redistributed in this repo. The test used:
+The following are not redistributed on GitHub. Available on request from the author:
 
-* `exercise3_data.dta`, a district year panel for Kenya 1963 to 2011 provided by the PI, derived from Burgess et al. 2015.
-* PI provided PDFs for the brief and the two math exercises, plus a curated set of reference papers, are also kept local only.
+| File | Description |
+|------|-------------|
+| `Task_MAIN_source.pdf` | The PI task brief |
+| `test_RAs_math_1.pdf` | Math exercise statement 1 (PI provided) |
+| `test_RAs_math_2.pdf` | Math exercise statement 2 (PI provided) |
+| `exercise3_data.dta` | District year panel for Kenya 1963 to 2011, PI curated extract derived from Burgess et al. 2015 |
+| `Papers/` (6 PDFs) | PI curated reference papers: Burgess et al. 2015, de Chaisemartin and D'Haultfoeuille 2023 and 2024, and three further working papers |
 
-The Burgess et al. 2015 data and the cited working papers are publicly accessible from the original publishers; the files used here are the PI curated copies, which is why they are not committed.
+The Burgess et al. 2015 dataset and the cited working papers are publicly accessible from the original publishers; the files used here are the PI curated copies, which is why they are not committed.
+
+Contact: siddhantpagare2014@gmail.com
 
 ## How to reproduce
 

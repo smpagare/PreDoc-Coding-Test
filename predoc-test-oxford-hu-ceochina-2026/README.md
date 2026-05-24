@@ -45,9 +45,17 @@ Synthesis: a two page memo distilling the headline patterns across firms and pol
 | source_documents/ceo_quotes/ | 38 .txt files with the original source text for each statement |
 | source_documents/policy_docs/ | 14 .txt files with the original source text for each policy |
 
-## Data
+## Data and PI materials
 
-All source materials come from public English language texts (earnings calls, shareholder letters, official government policy releases, law firm and think tank analyses). The `source_documents/` folder contains the candidate's collated source files. Paywalled sources (e.g., Bloomberg, SCMP) are referenced by URL only; full text from those was not redistributed.
+The following are not redistributed on GitHub. Available on request from the author:
+
+| File | Description |
+|------|-------------|
+| `Research Assistant Task - Overseas.pdf` | The PI task brief |
+
+All source materials in `source_documents/` come from public English language texts (earnings calls, shareholder letters, official government policy releases, law firm and think tank analyses). Paywalled sources (e.g., Bloomberg, SCMP) are referenced by URL only; full text from those was not redistributed.
+
+Contact: siddhantpagare2014@gmail.com
 
 ## How to reproduce
 
