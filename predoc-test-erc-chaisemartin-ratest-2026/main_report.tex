@@ -1,0 +1,60 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=black, citecolor=blue}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{black!30}
+}
+
+\title{Research Assistant Test for ERC Really Credible }
+\author{Siddhant Manav Pagare }
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\section*{Exercise 1}
+\input{exercise1/solution.tex}
+
+\newpage
+
+\section*{Exercise 3}
+\input{exercise3/writeup.tex}
+
+\newpage
+
+\section*{Exercise 6}
+\input{exercise6/answers.tex}
+
+\newpage
+
+\section*{Exercise 7}
+\input{exercise7/commit_review.tex}
+
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\section*{AI use}
+
+Every numerical result in this report was reproduced from the supplied data, and every citation was verified against the published paper or working-paper PDF in the \texttt{Papers/} folder. Claude (Anthropic) served as a syntax assistant for the Stata Monte Carlo loop in Exercise 1 and as a drafting aide for the LaTeX writeup throughout. Mathematical derivations, the design of Part 3 of Exercise 3, the diagnosis of the user questions in Exercise 6, and the reading of commit \texttt{b3849a3} and issue 72 in Exercise 7 are mine; the package help file and the relevant theorems from \citet{dCDH2023} and \citet{dCDH2024} were read directly rather than summarised through the model. A clean transcript of the substantive AI exchange for Exercise 1 is included in \texttt{ai\_transcripts/}, formatted per the template I used at the top of each prompt: context, conceptual framework already in place, the narrow task, the constraints, and the verification step.
+
+\end{document}

@@ -1,0 +1,13 @@
+TestRA copy/
+Papers/
+.DS_Store
+.Rhistory
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz

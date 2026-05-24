@@ -1,0 +1,162 @@
+% Exercise 6, four user questions to chaisemartinPackages.
+
+
+\noindent \textbf{Given.} Four anonymized emails sent by \texttt{did\_multiplegt\_dyn} users to the \texttt{chaisemartinPackages} support inbox.\\
+
+\noindent We are asked to answer each user, either by pointing them to the right resource or by explaining how to use the command correctly.\\
+
+\noindent We reply to each user in turn. Option names and behaviour are as documented in the help file shipped with the R and Stata implementations of \texttt{did\_multiplegt\_dyn}. Where the same option is named differently in the two languages we note both.
+
+\subsection*{Question 1}
+
+ The student has four binary treatment variables, one per Levelling Up funding round (\texttt{pot1} switching on in 2021, \texttt{pot2} in 2022, \texttt{pot3} in 2023, \texttt{pot4} in 2024). They want the dynamic effect of each pot separately. The implicit complication, which they do not flag but matters for the answer, is that a single local authority can win more than one round, so the four treatments overlap on the same unit and the same time.\\
+
+ \texttt{did\_multiplegt\_dyn} takes one treatment variable per call. To recover the four separate effects, run the command four times, once per pot. The package FAQ flags this design as supported, citing Web Appendix Section 3.2 of \citet{dCDH2023}, provided each treatment is binary and staggered; the pots satisfy that condition by construction. The implementation in that appendix (Theorem 6) is not to add the other pots inside \texttt{controls()}, but to restrict the sample so that the other pots are in a known state and to use \texttt{trends\_nonparam} on the cohort indicator when relevant. We follow that recipe below. The number of estimable horizons for each pot is set by the years of post switch data available before the next pot arrives.\\
+
+ First, tabulate the pots against each other to find out whether authorities overlap. If pots are mutually exclusive across authorities (each authority wins at most one round), four independent calls without any sample restriction give four clean ATEs. If pots overlap, run four calls with the sample restrictions below: each call drops the periods where a not yet considered pot has switched on, and includes the cohort of any already considered pot in \texttt{trends\_nonparam}.\\
+
+\begin{lstlisting}
+* Stata, did_multiplegt_dyn version on SSC, current as of 2026
+
+* Assumes a balanced authority by year panel from 2019 to 2024
+* with binary indicators pot1, pot2, pot3, pot4 turning on at the funding year
+
+* Step 0, check whether pots are mutually exclusive
+tab pot1 pot2
+tab pot1 pot3
+tab pot2 pot3
+
+* Step 1, Pot 1, drop authority years after later pots have arrived
+preserve
+keep if pot2 == 0 & pot3 == 0 & pot4 == 0
+did_multiplegt_dyn outcome authority year pot1, ///
+    effects(3) placebo(2) cluster(authority)
+restore
+
+* Step 2, Pot 2, restrict to cells where pot3 and pot4 are still off,
+* and include the cohort of pot1 adoption in trends_nonparam
+preserve
+keep if pot3 == 0 & pot4 == 0
+bysort authority (year): egen F_pot1 = min(cond(pot1 == 1, year, .))
+replace F_pot1 = 9999 if missing(F_pot1)
+did_multiplegt_dyn outcome authority year pot2, ///
+    effects(2) placebo(2) cluster(authority) ///
+    trends_nonparam(F_pot1)
+restore
+
+* Step 3, Pot 3, restrict to cells where pot4 is still off,
+* and include the cohorts of pot1 and pot2 in trends_nonparam
+preserve
+keep if pot4 == 0
+bysort authority (year): egen F_pot1 = min(cond(pot1 == 1, year, .))
+bysort authority (year): egen F_pot2 = min(cond(pot2 == 1, year, .))
+replace F_pot1 = 9999 if missing(F_pot1)
+replace F_pot2 = 9999 if missing(F_pot2)
+egen F_prior = group(F_pot1 F_pot2)
+did_multiplegt_dyn outcome authority year pot3, ///
+    effects(1) placebo(2) cluster(authority) ///
+    trends_nonparam(F_prior)
+restore
+
+* Step 4, Pot 4, only the switch year is observed in 2024
+* Dynamic effects cannot be estimated; report the contemporaneous effect only
+bysort authority (year): egen F_pot1 = min(cond(pot1 == 1, year, .))
+bysort authority (year): egen F_pot2 = min(cond(pot2 == 1, year, .))
+bysort authority (year): egen F_pot3 = min(cond(pot3 == 1, year, .))
+replace F_pot1 = 9999 if missing(F_pot1)
+replace F_pot2 = 9999 if missing(F_pot2)
+replace F_pot3 = 9999 if missing(F_pot3)
+egen F_prior = group(F_pot1 F_pot2 F_pot3)
+did_multiplegt_dyn outcome authority year pot4, ///
+    effects(1) placebo(2) cluster(authority) ///
+    trends_nonparam(F_prior)
+\end{lstlisting}
+
+ Three points to flag to the student. First, the sample restrictions are the formal mechanism in Theorem 6 of the cited Web Appendix; they cost statistical power but deliver a clean causal estimand. Second, the four pots together produce a treatment vector $(pot1_{i,t}, pot2_{i,t}, pot3_{i,t}, pot4_{i,t})$ that takes up to $2^4 = 16$ values across the panel. With a typical Levelling Up sample of roughly 300 local authorities, the cell sizes inside each subsample will be small, so dynamic effects at long horizons will be imprecise. The student should report cell counts alongside each effect, via the \texttt{save\_results} option (Question 2 below). Third, the \texttt{controls()} option is intended for time varying continuous covariates and is not the right tool for a binary staggered other treatment; passing such a treatment to \texttt{controls()} runs without error but residualises only on first differences and therefore does not capture the persistent effect of the other treatment.
+
+\subsection*{Question 2}
+
+ A PhD student wants the number of observations used to construct the event study graph, for the bottom of a slide.\\
+
+ The cleanest way is the \texttt{save\_results} option, which writes a separate dataset listing each estimated effect (and each placebo) alongside its standard error, 95\% confidence interval, and the number of observations used at that horizon. After running with the option, open the saved dataset to read the per horizon counts off directly. As a complement, \texttt{ereturn list} after the command displays all stored scalars and matrices, including the total switcher count behind the average effect and the per horizon counts.\\
+
+\begin{lstlisting}
+* Stata
+
+did_multiplegt_dyn outcome group time treatment, ///
+    effects(5) placebo(3) cluster(group) ///
+    save_results("ev_study_results.dta")
+
+* Inspect the saved file
+preserve
+use "ev_study_results.dta", clear
+list, abbreviate(20)
+restore
+
+* Alternative, query e() macros directly
+ereturn list
+disp "Total switcher periods behind the average: " e(N_avg_total_effect)
+\end{lstlisting}
+
+ The number reported is the count of group by period cells used in the estimation at each horizon, which is the natural quantity to put on a slide. It is not the count of distinct switching units, which is typically smaller (one unit contributes multiple cells across horizons). If the student prefers the number of distinct switchers behind the graph, they should construct it from the panel itself (number of unique \texttt{group} values where \texttt{treatment} changes), not from the package output.
+
+\subsection*{Question 3}
+
+ An R user has a product by month panel with 60 monthly observations per product. They are running \texttt{did\_multiplegt\_dyn} with \texttt{time = "linear\_month"} (a $1$ to $60$ index) and want to control for monthly seasonality, motivated by recurring discount seasons.\\
+
+ The command already controls for any aggregate price shock that hits every product in the same month, because it includes a time fixed effect at the level of the time variable. With \texttt{time = "linear\_month"} taking values $1, 2, \dots, 60$, each calendar month in the panel has its own fixed effect, so the cross product seasonal pattern (the heavy December discount, the August lull) is absorbed automatically. The user does not need to add anything for the seasonality they describe.\\
+
+The reason \texttt{controls} cannot take month dummies is mechanical: the option residualises the first difference of the outcome on the first differences of the controls, so a dummy contributes only at its turn on date, not at the level. For seasonal controls that vary across product categories rather than across products, the right tool is \texttt{trends\_nonparam}, which interacts the time fixed effects with a time invariant group level variable. The most common application is a product category indicator that allows electronics, apparel and food to follow distinct calendar trends.
+
+\begin{lstlisting}
+# R, current did_multiplegt_dyn signature
+
+# Time fixed effects absorb aggregate seasonality automatically
+mod_base <- did_multiplegt_dyn(
+  final_sample, "log_price", "prod_ID", "linear_month", "new_treatment",
+  effects = 12, placebo = 12, cluster = "prod_ID"
+)
+
+# If different product categories experience different seasonality,
+# create a time invariant category indicator at the product level
+# and pass it to trends_nonparam
+mod_cat <- did_multiplegt_dyn(
+  final_sample, "log_price", "prod_ID", "linear_month", "new_treatment",
+  effects = 12, placebo = 12, cluster = "prod_ID",
+  trends_nonparam = "category"
+)
+\end{lstlisting}
+
+ \texttt{trends\_nonparam} requires the variable to be time invariant at the group level: each \texttt{prod\_ID} must have one constant category. If category itself varies over time for a given product (e.g.\ reclassifications), the option will not accept it and the user must either pick a coarser, stable grouping or drop the time varying category.
+
+\subsection*{Question 4}
+
+ A PhD student wants to estimate the dynamic effect of a main treatment while accounting for a second policy that hits treated groups later, at staggered horizons. They want to add this second policy as an extra fixed effect inside \texttt{did\_multiplegt\_dyn}.\\
+
+ The command does not accept extra fixed effects beyond group and time. For a binary staggered second policy that contaminates the post treatment horizons of the focal estimator, Theorem 6 of \citet{dCDH2023}, Web Appendix Section 3.2, prescribes a sample restriction, not a control variable. The cleanest implementation here is to drop the (group, time) cells where the second policy has already arrived, then run \texttt{did\_multiplegt\_dyn} on the focal treatment in that restricted panel. The estimator then targets the dynamic effect of the main treatment uncontaminated by the second policy, at the cost of any horizon where the second policy has begun to contaminate the data.\\
+
+If horizons longer than the second policy's typical arrival lag are still of interest, a complementary strategy from page 49 of the same Web Appendix is to include the cohort indicator of the second policy in \texttt{trends\_nonparam}, which allows counterfactual trends to differ by the timing of contamination. The two approaches answer slightly different questions: the sample restriction estimates the effect in the regime where the second policy has not yet arrived; the \texttt{trends\_nonparam} approach uses the full panel but assumes parallel trends within each second policy cohort.\\
+
+
+\begin{lstlisting}
+* Stata
+
+* Main treatment T_main (binary, staggered), second policy T_second (binary, staggered)
+
+* Approach 1, primary: restrict the sample to cells before the second policy arrives
+preserve
+keep if T_second == 0
+did_multiplegt_dyn outcome group time T_main, ///
+    effects(5) placebo(3) cluster(group)
+restore
+
+* Approach 2, complementary: keep the full sample, but allow trends to differ
+* by the cohort of second policy adoption (F_T2 = first period of T_second == 1)
+bysort group (time): egen F_T2 = min(cond(T_second == 1, time, .))
+replace F_T2 = 9999 if missing(F_T2)
+did_multiplegt_dyn outcome group time T_main, ///
+    effects(5) placebo(3) cluster(group) ///
+    trends_nonparam(F_T2)
+\end{lstlisting}
+
+ Two limits worth flagging. First, the procedures above cover binary staggered second treatments. If the second policy varies in intensity or unwinds and switches back on, the user is outside the regime in which Theorem 6 was proved, and they should consult \citet{dCDH2023} directly to assess whether their case fits. Second, the dynamic multi treatment problem is still active research. The static identification result in \citet{dCDH2023} is the cleanest theoretical anchor; the sample restriction and \texttt{trends\_nonparam} recipes above are the dynamic adaptations the package supports, and the staggered binary assumption is the empirical price for them.

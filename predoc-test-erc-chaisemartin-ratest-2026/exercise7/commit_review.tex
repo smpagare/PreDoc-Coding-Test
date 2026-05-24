@@ -1,0 +1,73 @@
+% Exercise 7, GitHub change review.
+
+\noindent \textbf{Given.} A GitHub commit dated 24 July 2024 in \texttt{Credible-Answers/did\_multiplegt\_dyn}, the team's current public repository for the package.\\
+
+\noindent We are asked to summarise the purpose of the change, identify the initial issue it addresses where relevant, and explain any new econometric tools with formulas.\\
+
+\noindent The date in fact carries two commits seconds apart. The first, \texttt{b72fe45}, archives the prior version of the \texttt{.ado} and \texttt{.sthlp} files as the SSC submission snapshot for that date. The second, \texttt{b3849a3}, is the substantive code change. The discussion below targets \texttt{b3849a3}; \texttt{b72fe45} is treated as a release housekeeping commit.
+
+The substantive commit adds one new econometric tool (a Wald test of joint nullity of all dynamic effects), fixes one bug reported by a user (issue 72), and bundles three smaller user experience improvements. We treat each in turn.
+
+\subsection*{New econometric tool, joint Wald test that all dynamic effects are zero}
+
+ \texttt{did\_multiplegt\_dyn} already shipped two diagnostics: an F test of joint nullity for the placebos (assess parallel trends) and, under the \texttt{effects\_equal} option, an F test that all dynamic effects are equal to one another (assess flatness of the event study). What was missing was the dual to the placebo test on the post side, namely a single test of the strict null that the treatment has no dynamic effect at any horizon. The commit adds that test and prints it automatically whenever at least two effects are requested and all of them are estimable.\\
+
+ Let $L$ be the number of post horizons requested (the scalar \texttt{l\_XX} in the code), let $\widehat{\mathrm{DID}}_\ell$ denote the estimated effect at horizon $\ell$ (the macro \texttt{DID\_l\_XX}), and stack the effects into the column vector
+\[
+\widehat{\boldsymbol{\beta}} = \bigl(\widehat{\mathrm{DID}}_1, \widehat{\mathrm{DID}}_2, \dots, \widehat{\mathrm{DID}}_L\bigr)^{\prime} \in \mathbb{R}^{L}.
+\]
+The code builds the estimated covariance matrix $\widehat{\boldsymbol{\Sigma}} \in \mathbb{R}^{L \times L}$ entry by entry. The diagonal entries are the squared standard errors already stored from the main estimation,
+\[
+\widehat{\boldsymbol{\Sigma}}[\ell, \ell] = \widehat{\mathrm{se}}_\ell^{\,2}.
+\]
+The off diagonal entries use the identity
+\[
+\mathrm{Var}(U_\ell + U_j) = \mathrm{Var}(U_\ell) + \mathrm{Var}(U_j) + 2\, \mathrm{Cov}(U_\ell, U_j),
+\]
+where $U_\ell$ is the unit level influence function contribution to the horizon $\ell$ effect (stored across observations as \texttt{U\_Gg\_var\_glob\_l\_XX}). Solving for the covariance,
+\[
+\widehat{\mathrm{Cov}}(U_\ell, U_j) = \tfrac{1}{2}\bigl[\widehat{\mathrm{Var}}(U_\ell + U_j) - \widehat{\mathrm{se}}_\ell^{\,2} - \widehat{\mathrm{se}}_j^{\,2}\bigr].
+\]
+The code constructs $U_\ell + U_j$ at the observation level, squares it, sums across the panel and divides by $G^2$ (the squared group count) to recover $\widehat{\mathrm{Var}}(U_\ell + U_j)$; the off diagonal entry is then filled in symmetrically. The test statistic is the standard Wald form
+\[
+W = \widehat{\boldsymbol{\beta}}^{\,\prime}\, \widehat{\boldsymbol{\Sigma}}^{-1}\, \widehat{\boldsymbol{\beta}}.
+\]
+Under the null $H_0: \delta_\ell = 0$ for all $\ell \in \{1, \dots, L\}$ and the asymptotic normality result for $\widehat{\boldsymbol{\beta}}$ from \citet{dCDH2024}, Theorem 1, $W$ converges in distribution to a $\chi^2_L$ variate, and the $p$ value is computed as
+\[
+\widehat{p}_{\text{joint}} = 1 - F_{\chi^2_L}(W).
+\]
+The scalar is stored as \texttt{e(p\_jointeffects)} and printed at the bottom of the standard output table, below the dynamic effects.\\
+
+ When the user passes the \texttt{normalized} option, the influence functions $U_\ell$ are rescaled by the corresponding cumulative incremental dose $\delta_D^\ell$ (the scalar \texttt{delta\_D\_l\_global\_XX}) before the off diagonals are computed, so the test is performed on the normalized estimator $\widehat{\mathrm{DID}}_\ell^n = \widehat{\mathrm{DID}}_\ell / \delta_D^\ell$. When the user passes the \texttt{bootstrap} option, the analytical $\widehat{\boldsymbol{\Sigma}}$ is replaced by the bootstrapped covariance matrix \texttt{bs\_var\_cov\_XX}, leaving the rest of the construction unchanged.\\
+
+ The pre existing \texttt{effects\_equal} routine tests $H_0: \delta_1 = \delta_2 = \dots = \delta_L$, that is, flatness of the event study. The new test targets $H_0: \delta_1 = \delta_2 = \dots = \delta_L = 0$, that is, no effect at any horizon. Rejecting the new test does not imply rejecting the equality test, and vice versa: a perfectly flat but nonzero event study would pass the equality test and fail the joint nullity test. The two diagnostics are complementary and the commit retains both. A line in the code, commented \texttt{// Modif Felix: this scalar is already initalized above and would now be overwritten when it should not be}, prevents the older equality routine from re initialising the joint nullity flag that the new code sets.
+
+\subsection*{Bug fix, issue 72: \texttt{inv\_Denom\_4\_XX not found}}
+
+A user (Yuankun Li, Tsinghua University) reported on 20 July 2024 that running \texttt{did\_multiplegt\_dyn} with the \texttt{controls()} option on a panel of five binary policy variables produced the error
+\begin{quote}\small\itshape
+inv\_Denom\_4\_XX not found
+\end{quote}
+for one of the five treatments while the other four ran without issue. Felix Knau (member of the team) closes the issue on 25 July with the message that the latest update fixes the bug; the latest update is \texttt{b3849a3}.
+
+The root cause is in the loop that adjusts the influence function for the controls. For each value $d$ of the period one treatment (variable \texttt{d\_sq\_int\_XX}) the code constructs a denominator matrix \texttt{inv\_Denom\_d\_XX} and inverts it; the inversion fails silently if the number of useful residual cells at that level (the scalar \texttt{useful\_res\_d\_XX}) is at most one, because the underlying regression has fewer observations than parameters. The control adjustment loop then references the missing matrix and Stata stops on the not found error. The fix adds the guard
+\begin{quote}\small\ttfamily
+if (scalar(useful\_res\_`l'\_XX) > 1)\{ \ldots \}
+\end{quote}
+around the inner sum over status quo levels, in both the effect branch (lines around 4247 in the diff) and the placebo branch (lines around 4590). Levels with at most one useful residual are skipped silently, the loop proceeds across the remaining levels, and the rest of the estimation completes. The fix is conservative in spirit: it does not invent a degenerate inverse, it simply drops the contributions that cannot be computed.
+
+\subsection*{Three user experience improvements}
+
+These do not change the econometrics, but they are visible to users and worth listing because each closes a specific failure mode.
+
+\begin{enumerate}
+\item \textbf{Tightened input check for \texttt{bootstrap(k)}.} The pre existing check rejected $k < 0$ as invalid. The new check rejects $k < 2$, on the rationale that a single bootstrap replication produces a degenerate variance estimate. The error message is updated correspondingly: \textit{the input of the \texttt{bootstrap()} option has to be a positive integer greater than 1}.
+
+\item \textbf{Validation inside \texttt{predict\_het}.} If the user invokes \texttt{predict\_het} but supplies no variable (the substring before the comma in the option's argument is empty), the new code prints a warning and silently ignores the option rather than letting the downstream code fail on an empty variable list.
+
+\item \textbf{Bootstrap loop with zero placebos.} The bootstrap routine builds a list of coefficient names to be resampled by iterating over both effect and placebo horizons. The pre existing code unconditionally called \texttt{numlist "1/`=l\_placebo\_XX'"}, which errors out when \texttt{l\_placebo\_XX} equals zero (no placebos requested). The fix wraps the placebo segment of the loop in \texttt{if `=l\_placebo\_XX'>0\{\ldots\}}, leaving the effect segment unchanged.
+
+
+\end{enumerate}
+
+
