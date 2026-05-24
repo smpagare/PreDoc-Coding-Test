@@ -1,0 +1,722 @@
+---
+title: "EFF 2017 Analysis: Task Solution"
+author: "Siddhant Manav Pagare"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: false
+    number_sections: true
+    keep_tex: false
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{float}
+  - \floatplacement{table}{H}
+  - \floatplacement{figure}{H}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.pos = "H",
+  fig.align = "center"
+)
+
+library(haven)
+library(tidyverse)
+library(fixest)
+library(modelsummary)
+library(boot)
+library(marginaleffects)
+library(knitr)
+library(kableExtra)
+
+root     <- "/Users/sid/Desktop/Git/cunef rojo"
+data_dir <- file.path(root, "toshare")
+fig_dir  <- file.path(root, "output", "figures")
+tab_dir  <- file.path(root, "output", "tables")
+log_dir  <- file.path(root, "log")
+
+eff  <- read_dta(file.path(data_dir, "eff.dta"))
+lang <- read_dta(file.path(data_dir, "secondlang_prob.dta"))
+```
+
+\newpage
+
+# Multiple Imputations and Weights
+
+## Weight Adjustment for Pooled Implicates (Q1a)
+
+The EFF 2017 contains five multiply imputed datasets (implicates), each carrying the survey weight `facine3`. When all five implicates are stacked, each household appears five times, so the weight must be divided by five to avoid inflating the implied population size. The adjusted weight is $w_{adj} = \texttt{facine3} / 5$.
+
+```{r q1a}
+eff$w_adj <- eff$facine3 / 5
+pooled_mean <- weighted.mean(eff$totnet, eff$w_adj)
+```
+
+Using the adjusted weights, the weighted average of total net wealth across all pooled implicates is **`r format(round(pooled_mean, 0), big.mark=",")`** EUR. This is identical to the weighted mean one would obtain from any single implicate, because the division by five applies uniformly to numerator and denominator of the weighted mean formula.
+
+## Demonstrating the Unadjusted Weight Error (Q1b)
+
+```{r q1b}
+pop_original <- sum(eff$facine3)
+pop_adjusted <- sum(eff$w_adj)
+wealth_original <- sum(eff$totnet * eff$facine3)
+wealth_adjusted <- sum(eff$totnet * eff$w_adj)
+mean_original <- weighted.mean(eff$totnet, eff$facine3)
+mean_adjusted <- weighted.mean(eff$totnet, eff$w_adj)
+
+q1b <- data.frame(
+  Weight       = c("facine3 (original)", "facine3/5 (adjusted)"),
+  `Sum of weights` = format(c(round(pop_original, 0), round(pop_adjusted, 0)), big.mark = ","),
+  `Total wealth (EUR)` = format(c(round(wealth_original, 0), round(wealth_adjusted, 0)), big.mark = ","),
+  `Mean wealth (EUR)` = format(c(round(mean_original, 0), round(mean_adjusted, 0)), big.mark = ","),
+  check.names = FALSE
+)
+```
+
+```{r q1b-table}
+kable(q1b, booktabs = TRUE, align = "lrrr",
+      caption = "Effect of weight adjustment on population totals and means") %>%
+  kable_styling(latex_options = c("hold_position"))
+```
+
+The key insight is that failing to adjust weights does not bias the weighted *mean*  it is `r format(round(mean_original, 0), big.mark=",")` EUR under both approaches because the factor of five cancels in the ratio $\bar{y}_w = \sum w_i y_i / \sum w_i$. However, the error is severe for *population totals*: the unadjusted sum of weights implies a population of `r format(round(pop_original/1e6, 1), big.mark=",")` million instead of `r format(round(pop_adjusted/1e6, 1), big.mark=",")` million, and total household wealth is inflated fivefold from `r format(round(wealth_adjusted/1e12, 2), big.mark=",")` to `r format(round(wealth_original/1e12, 2), big.mark=",")` trillion EUR. Any analysis that depends on levels  aggregate statistics, population counts, or poverty headcounts  would be severely distorted.
+
+## Per-Implicate Weighted Means (Q1c)
+
+```{r q1c}
+imp_means <- numeric(5)
+for (m in 1:5) {
+  sub <- eff[eff$imp == m, ]
+  imp_means[m] <- weighted.mean(sub$totnet, sub$facine3)
+}
+
+imp_df <- data.frame(
+  Implicate = 1:5,
+  `Weighted mean (EUR)` = format(round(imp_means, 1), big.mark = ","),
+  check.names = FALSE
+)
+```
+
+```{r q1c-table}
+kable(imp_df, booktabs = TRUE, align = "cr",
+      caption = "Weighted mean net wealth by implicate") %>%
+  kable_styling(latex_options = c("hold_position"))
+```
+
+The five implicate-specific means range from `r format(round(min(imp_means), 0), big.mark=",")` to `r format(round(max(imp_means), 0), big.mark=",")` EUR, a spread of only `r format(round(max(imp_means) - min(imp_means), 0), big.mark=",")` EUR (less than 1% of the point estimate). This narrow range indicates that the imputation model introduces very little additional uncertainty for the first moment of net wealth.
+
+## Rubin's Combining Rules (Q1d)
+
+```{r q1d}
+Q_bar <- mean(imp_means)
+B <- var(imp_means)
+
+W_vec <- numeric(5)
+for (m in 1:5) {
+  sub <- eff[eff$imp == m, ]
+  w   <- sub$facine3
+  mu  <- weighted.mean(sub$totnet, w)
+  wvar <- sum(w * (sub$totnet - mu)^2) / sum(w)
+  n_eff <- sum(w)^2 / sum(w^2)
+  W_vec[m] <- wvar / n_eff
+}
+W <- mean(W_vec)
+T_var <- W + (1 + 1/5) * B
+se <- sqrt(T_var)
+```
+
+Using Rubin's rules, the combined estimate is:
+
+- **Point estimate** $\bar{Q}$: `r format(round(Q_bar, 0), big.mark=",")` EUR
+- **Between-imputation variance** $B$: `r format(round(B, 0), big.mark=",")`
+- **Within-imputation variance** $\bar{W}$: `r format(round(W, 0), big.mark=",")`
+- **Total variance** $T = \bar{W} + (1 + 1/M) B$: `r format(round(T_var, 0), big.mark=",")`
+- **Standard error** $\sqrt{T}$: `r format(round(se, 0), big.mark=",")`
+
+The between-imputation variance $B$ = `r format(round(B, 0), big.mark=",")` is negligible relative to the within-imputation variance $\bar{W}$ = `r format(round(W/1e6, 1), big.mark=",")` million, confirming that the multiple imputation procedure is well-specified for this estimand. The fraction of missing information, $\lambda = (1 + 1/M) B / T$, is approximately `r round((1 + 1/5) * B / T_var * 100, 2)`%, indicating that imputation uncertainty contributes almost nothing to the total uncertainty in the mean.
+
+
+# Descriptive Statistics
+
+```{r q2-setup}
+# Use implicate 1 throughout
+df <- eff[eff$imp == 1, ]
+df <- df[df$age_resp >= 25 & df$age_resp < 85, ]
+df$age_grp <- cut(df$age_resp,
+                  breaks = seq(25, 85, 5),
+                  right = FALSE,
+                  labels = paste0(seq(25, 80, 5), "-", seq(29, 84, 5)))
+```
+
+## Homeownership by Age Group (Q2a)
+
+```{r q2a}
+own_by_age <- df %>%
+  group_by(age_grp) %>%
+  summarise(
+    own_rate = weighted.mean(own, facine3),
+    n = n(),
+    .groups = "drop"
+  )
+
+own_display <- own_by_age %>%
+  mutate(
+    `Ownership rate` = paste0(round(own_rate * 100, 1), "%"),
+    N = format(n, big.mark = ",")
+  ) %>%
+  select(`Age group` = age_grp, `Ownership rate`, N)
+```
+
+Age groups are defined as five-year bins from 25 to 84 using `cut(age_resp, breaks=seq(25,85,5), right=FALSE)`, yielding 12 groups. The sample is restricted to respondents aged 25-80 (upper bin is 80-84, which captures respondents up to age 84). This restriction drops very young households that are unlikely to have entered the housing market and very old respondents with small cell sizes.
+
+```{r q2a-table}
+kable(own_display, booktabs = TRUE, align = "crr",
+      caption = "Weighted homeownership rate by age group (imp = 1)") %>%
+  kable_styling(latex_options = c("hold_position"))
+```
+
+Homeownership rises steeply from `r round(own_by_age$own_rate[1]*100, 1)`% for the 25-29 group to `r round(own_by_age$own_rate[9]*100, 1)`% for ages 65-69, then plateaus. This life-cycle pattern is consistent with the standard theory of housing tenure: households rent when young, accumulate savings, and transition to ownership during prime working years. The plateau above age 65 indicates that ownership is an absorbing state few households sell their main residence in retirement, consistent with strong bequest motives and attachment to the family home common in Spain.
+
+## Homeownership by Age and Gender (Q2b)
+
+```{r q2b, fig.cap="Homeownership rate by age group and gender", fig.width=7, fig.height=4.5}
+own_all <- df %>%
+  group_by(age_grp) %>%
+  summarise(own_rate = weighted.mean(own, facine3), group = "All", .groups = "drop")
+own_men <- df %>%
+  filter(gender_resp == 0) %>%
+  group_by(age_grp) %>%
+  summarise(own_rate = weighted.mean(own, facine3), group = "Men", .groups = "drop")
+own_women <- df %>%
+  filter(gender_resp == 1) %>%
+  group_by(age_grp) %>%
+  summarise(own_rate = weighted.mean(own, facine3), group = "Women", .groups = "drop")
+own_gender <- bind_rows(own_all, own_men, own_women)
+
+ggplot(own_gender, aes(x = age_grp, y = own_rate, color = group, group = group)) +
+  geom_line(linewidth = 0.7) +
+  geom_point(size = 1.8) +
+  scale_color_manual(values = c("All" = "black", "Men" = "blue", "Women" = "red")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw(base_size = 11) +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Age group", y = "Homeownership rate", color = NULL)
+```
+
+The three series largely overlap, with men and women tracking each other closely through the life cycle. Both genders exhibit the same steep ascent during ages 25-54 and plateau after 65. The gender gap is modest throughout, which is consistent with the fact that the EFF records the household's reference person, and homeownership is a household-level outcome reflecting joint decisions. Any gender differences likely capture compositional effects differences in household structure, marital status, and income rather than gender-specific barriers to homeownership per se.
+
+## Bootstrapped Median Wealth by Age (Q2c)
+
+```{r q2c-compute}
+weighted_median <- function(x, w) {
+  ord <- order(x)
+  x <- x[ord]; w <- w[ord]
+  cumw <- cumsum(w) / sum(w)
+  x[which(cumw >= 0.5)[1]]
+}
+
+set.seed(42)
+boot_median <- function(data, idx) {
+  d <- data[idx, ]
+  weighted_median(d$totnet, d$facine3)
+}
+
+age_levels <- levels(df$age_grp)
+boot_results <- data.frame()
+for (ag in age_levels) {
+  sub <- df[df$age_grp == ag, ]
+  b <- boot(sub, boot_median, R = 500)
+  ci <- boot.ci(b, type = "perc")
+  boot_results <- rbind(boot_results, data.frame(
+    age_grp = ag, median = b$t0,
+    ci_lo = ci$percent[4], ci_hi = ci$percent[5]))
+}
+```
+
+```{r q2c-plot, fig.cap="Median net wealth by age group with 95\\% bootstrap CI", fig.width=7, fig.height=4.5}
+ggplot(boot_results, aes(x = age_grp, y = median, group = 1)) +
+  geom_ribbon(aes(ymin = ci_lo, ymax = ci_hi), alpha = 0.2, fill = "steelblue") +
+  geom_line(color = "steelblue", linewidth = 0.7) +
+  geom_point(color = "steelblue", size = 1.8) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_bw(base_size = 11) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Age group", y = "Median net wealth (EUR)",
+       caption = "95% bootstrap CI (R = 500, percentile method)")
+```
+
+Median net wealth follows a hump-shaped life-cycle profile, rising from `r format(round(boot_results$median[1], 0), big.mark=",")` EUR for ages 25-29 to a peak of `r format(round(boot_results$median[8], 0), big.mark=",")` EUR for ages 60-64, then declining to `r format(round(boot_results$median[12], 0), big.mark=",")` EUR by ages 80-84. This is the canonical life-cycle saving pattern: households accumulate wealth during working years and decumulate in retirement. The confidence intervals are wider at the extremes where cell sizes are smaller (only `r own_by_age$n[1]` households in the 25-29 bin). One noteworthy feature is that the decline in median wealth after age 65 is steep wealth falls by roughly 40% from the peak which is steeper than standard life-cycle models with bequest motives would predict, suggesting that health expenditures or transfers to children may play a role.
+
+## Reusable Plotting Function (Q2d)
+
+```{r q2d, fig.cap="Other real estate ownership by age and gender (function demonstration)", fig.width=7, fig.height=4.5}
+plot_ownership_rate <- function(data, outcome_var, xlab, ylab, title) {
+  rates_all <- data %>%
+    group_by(age_grp) %>%
+    summarise(rate = weighted.mean(.data[[outcome_var]], facine3), group = "All", .groups = "drop")
+  rates_men <- data %>%
+    filter(gender_resp == 0) %>%
+    group_by(age_grp) %>%
+    summarise(rate = weighted.mean(.data[[outcome_var]], facine3), group = "Men", .groups = "drop")
+  rates_women <- data %>%
+    filter(gender_resp == 1) %>%
+    group_by(age_grp) %>%
+    summarise(rate = weighted.mean(.data[[outcome_var]], facine3), group = "Women", .groups = "drop")
+  rates <- bind_rows(rates_all, rates_men, rates_women)
+
+  ggplot(rates, aes(x = age_grp, y = rate, color = group, group = group)) +
+    geom_line(linewidth = 0.7) +
+    geom_point(size = 1.8) +
+    scale_color_manual(values = c("All" = "black", "Men" = "blue", "Women" = "red")) +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme_bw(base_size = 11) +
+    theme(legend.position = "bottom",
+          axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(x = xlab, y = ylab, title = title, color = NULL)
+}
+
+plot_ownership_rate(df, "own_ot",
+                    xlab = "Age group",
+                    ylab = "Ownership rate",
+                    title = "Other real estate ownership by age and gender")
+```
+
+The function `plot_ownership_rate()` takes a data frame, an outcome variable name (using `.data[[outcome_var]]` for tidy evaluation), and axis labels. When applied to secondary home ownership (`own_ot`), the resulting plot shows a similar life-cycle rise but at a much lower level (peaking around 40-45% for older age groups vs. 85% for main residence). The gender gap is also more visible here, consistent with the idea that second-home ownership reflects discretionary wealth accumulation, which may vary more across gender due to income differences.
+
+
+# Homeownership Models
+
+```{r q3-setup}
+df3 <- eff[eff$imp == 1, ]
+
+df3$educ_cat <- case_when(
+  df3$educ_resp <= 4                            ~ "low",
+  df3$educ_resp <= 8                            ~ "medium",
+  df3$educ_resp %in% c(9, 11, 12, 1001, 1002)  ~ "high"
+)
+df3$educ_cat <- factor(df3$educ_cat, levels = c("low", "medium", "high"))
+df3$log_hhinc <- log(pmax(df3$hh_inc, 1))
+```
+
+## LPM for Main Residence (Q3a)
+
+```{r q3a}
+lpm_own <- feols(own ~ age_resp + I(age_resp^2) + educ_cat + emp_resp +
+                   self_resp + une_resp + hhsize + log_hhinc,
+                 data = df3, weights = ~facine3, vcov = "hetero")
+
+ct_own <- as.data.frame(coeftable(lpm_own))
+ct_own$Variable <- rownames(ct_own)
+```
+
+```{r q3a-table, results='asis'}
+modelsummary(list("LPM: Main residence" = lpm_own),
+             stars = c('*' = 0.1, '**' = 0.05, '***' = 0.01),
+             gof_map = list(
+               list("raw" = "nobs", "clean" = "N", "fmt" = 0),
+               list("raw" = "r.squared", "clean" = "$R^2$", "fmt" = 3)
+             ),
+             output = "kableExtra",
+             title = "LPM: Probability of owning main residence") %>%
+  kable_styling(latex_options = c("hold_position"))
+```
+
+The LPM coefficients align closely with the descriptive patterns from Question 2:
+
+- **Age**: The positive linear coefficient (`r round(ct_own$Estimate[ct_own$Variable == "age_resp"], 4)`) combined with the negative quadratic (`r format(round(ct_own$Estimate[ct_own$Variable == "I(I(age_resp^2))"], 6), scientific=FALSE)`) implies a concave age-ownership profile peaking around age `r round(-ct_own$Estimate[ct_own$Variable == "age_resp"] / (2 * ct_own$Estimate[ct_own$Variable == "I(I(age_resp^2))"]), 0)`, consistent with the life-cycle pattern observed in Q2a.
+- **Education**: High education increases ownership by `r round(ct_own$Estimate[ct_own$Variable == "educ_cathigh"] * 100, 1)` pp relative to low education (p < 0.01), while the medium-education effect is small and insignificant, suggesting a threshold effect at the college level.
+- **Unemployment**: The largest negative effect at `r round(ct_own$Estimate[ct_own$Variable == "une_resp"] * 100, 1)` pp, consistent with credit constraints and income instability reducing access to homeownership.
+- **Employment and self-employment**: Current employment has a small *negative* coefficient (`r round(ct_own$Estimate[ct_own$Variable == "emp_resp"] * 100, 1)` pp), which is initially surprising but likely reflects the age composition of the reference category (retirees, who have high ownership rates as seen in Q2).
+- **Household size**: Each additional member adds `r round(ct_own$Estimate[ct_own$Variable == "hhsize"] * 100, 1)` pp, reflecting the space needs that push larger households toward ownership.
+- **Log income**: Positive but small (`r round(ct_own$Estimate[ct_own$Variable == "log_hhinc"] * 100, 1)` pp per log point), suggesting that permanent income proxies (education, employment) capture most of the income-related variation.
+
+## LPM vs. Probit Comparison (Q3b)
+
+```{r q3b}
+probit_own <- glm(own ~ age_resp + I(age_resp^2) + educ_cat + emp_resp +
+                    self_resp + une_resp + hhsize + log_hhinc,
+                  data = df3, family = binomial("probit"), weights = facine3)
+ame_own <- avg_slopes(probit_own)
+```
+
+A key drawback of the LPM is that predicted probabilities can fall outside $[0, 1]$, and it imposes a constant marginal effect regardless of the baseline probability level. A probit model addresses both issues by modeling $P(own = 1 | X) = \Phi(X\beta)$, ensuring predictions lie in the unit interval and allowing marginal effects to vary with covariates.
+
+The probit average marginal effects (AMEs) are qualitatively similar to the LPM coefficients, which is expected when the outcome is not too close to 0 or 1 for most observations. In this sample the average homeownership rate is around 80%, so the LPM approximation works reasonably well in the interior of the distribution. The probit specification was chosen over a logit because probit is the conventional choice for housing tenure models in the literature and yields nearly identical results to logit in practice.
+
+## Models for Other Real Estate (Q3c-Q3d)
+
+```{r q3cd}
+lpm_ot <- feols(own_ot ~ age_resp + I(age_resp^2) + educ_cat + emp_resp +
+                  self_resp + une_resp + hhsize + log_hhinc,
+                data = df3, weights = ~facine3, vcov = "hetero")
+
+probit_ot <- glm(own_ot ~ age_resp + I(age_resp^2) + educ_cat + emp_resp +
+                   self_resp + une_resp + hhsize + log_hhinc,
+                 data = df3, family = binomial("probit"), weights = facine3)
+
+ct_ot <- as.data.frame(coeftable(lpm_ot))
+ct_ot$Variable <- rownames(ct_ot)
+```
+
+```{r q3cd-table, results='asis'}
+modelsummary(list("Main residence" = lpm_own, "Other real estate" = lpm_ot),
+             stars = c('*' = 0.1, '**' = 0.05, '***' = 0.01),
+             gof_map = list(
+               list("raw" = "nobs", "clean" = "N", "fmt" = 0),
+               list("raw" = "r.squared", "clean" = "$R^2$", "fmt" = 3)
+             ),
+             output = "kableExtra",
+             title = "LPM comparison: Main residence vs. other real estate") %>%
+  kable_styling(latex_options = c("hold_position"))
+```
+
+Comparing the two outcomes reveals important differences in the drivers of property ownership:
+
+- **Education gradient**: The education effect is far steeper for other real estate. High education adds `r round(ct_ot$Estimate[ct_ot$Variable == "educ_cathigh"] * 100, 1)` pp for secondary property (vs. `r round(ct_own$Estimate[ct_own$Variable == "educ_cathigh"] * 100, 1)` pp for main residence), and medium education is now significant at `r round(ct_ot$Estimate[ct_ot$Variable == "educ_catmedium"] * 100, 1)` pp. This suggests secondary property is a luxury good whose demand is strongly income-elastic.
+- **Self-employment**: Insignificant for main residence but large and significant for other real estate (`r round(ct_ot$Estimate[ct_ot$Variable == "self_resp"] * 100, 1)` pp), pointing to the role of investment property in entrepreneurial wealth portfolios.
+- **Log income**: Larger and more significant for other real estate (`r round(ct_ot$Estimate[ct_ot$Variable == "log_hhinc"] * 100, 1)` pp vs. `r round(ct_own$Estimate[ct_own$Variable == "log_hhinc"] * 100, 1)` pp), reinforcing the luxury good interpretation.
+
+The most noteworthy finding is that the drivers of main-residence ownership are dominated by life-cycle factors (age, household size) and credit access (unemployment), while secondary property ownership is driven more by wealth-related variables (education, self-employment, income). This dichotomy aligns with the theoretical distinction between housing as consumption (main residence) and housing as investment (secondary property).
+
+
+# Merge and Proxy for Internationally Exposed Education
+
+```{r q4-setup}
+df4 <- eff[eff$imp == 1, ]
+df4 <- df4 %>% left_join(lang, by = "educ_resp")
+unmatched <- unique(df4$educ_resp[is.na(df4$p_knows_second_lang)])
+wmean_lang <- weighted.mean(df4$p_knows_second_lang[!is.na(df4$p_knows_second_lang)],
+                            df4$facine3[!is.na(df4$p_knows_second_lang)])
+n_imputed <- sum(is.na(df4$p_knows_second_lang))
+df4$p_knows_second_lang[is.na(df4$p_knows_second_lang)] <- wmean_lang
+```
+
+## Merge Quality and Imputation (Q4a)
+
+The merge is not perfect. Education codes `r paste(sort(unmatched), collapse = " and ")` in the EFF have no corresponding entry in the language probability file, affecting `r n_imputed` observations. These codes likely correspond to intermediate vocational qualifications not separately identified in the language survey.
+
+Missing values are imputed using the weighted mean of matched observations (`r round(wmean_lang, 3)`). This is preferred over adjacent-code interpolation because education codes are not ordinal across all levels (code 97, for instance, is an unclassifiable "other" category). The weighted mean preserves the population-level probability and avoids imposing a functional form on the education-language relationship.
+
+```{r q4a-table}
+lang_merged <- df4 %>%
+  group_by(educ_resp) %>%
+  summarise(p_lang = first(p_knows_second_lang), .groups = "drop") %>%
+  arrange(educ_resp)
+
+kable(lang_merged, booktabs = TRUE, col.names = c("Education code", "P(second language)"),
+      caption = "Probability of knowing a second language by education code (after merge and imputation)",
+      digits = 3) %>%
+  kable_styling(latex_options = c("hold_position"))
+```
+
+## International Exposure Proxy (Q4b)
+
+```{r q4b}
+df4$high_educ <- as.integer(df4$educ_resp %in% c(9, 11, 12, 1001, 1002))
+df4$intl_proxy <- df4$p_knows_second_lang * df4$high_educ
+
+# Wealth quintiles
+wq_fn <- function(x, w, nq = 5) {
+  ord <- order(x)
+  x <- x[ord]; w <- w[ord]
+  cumw <- cumsum(w) / sum(w)
+  breaks <- sapply(1:(nq - 1), function(q) x[which(cumw >= q / nq)[1]])
+  cuts <- c(-Inf, breaks, Inf)
+  cut(x[order(ord)], breaks = cuts, labels = paste0("Q", 1:nq), include.lowest = TRUE)
+}
+df4$wealth_q <- wq_fn(df4$totnet, df4$facine3)
+
+proxy_by_wq <- df4 %>%
+  group_by(wealth_q) %>%
+  summarise(mean_proxy = weighted.mean(intl_proxy, facine3), .groups = "drop")
+```
+
+The proxy is defined as $\texttt{intl\_proxy} = P(\text{second language} \mid \text{educ}) \times \mathbf{1}[\text{high education}]$. This captures the idea that internationally exposed education requires both a college-level qualification and a non-trivial probability of multilingualism. The proxy is nonzero only for college-educated respondents, and higher among those education codes with greater language exposure (e.g., 0.777 for postgraduate vs. 0.562 for basic university).
+
+```{r q4b-plot, fig.cap="Mean international exposure proxy by wealth quintile", fig.width=7, fig.height=4.5}
+ggplot(proxy_by_wq, aes(x = wealth_q, y = mean_proxy)) +
+  geom_col(fill = "steelblue", width = 0.6) +
+  theme_bw(base_size = 11) +
+  labs(x = "Wealth quintile", y = "Mean international proxy")
+```
+
+The proxy increases monotonically from `r round(proxy_by_wq$mean_proxy[1], 3)` in Q1 to `r round(proxy_by_wq$mean_proxy[5], 3)` in Q5, a fourfold increase. This is consistent with the positive association between wealth and educational attainment. As a proxy, it has the limitation of conflating language ability (a demand-side human capital characteristic) with actual international educational experience (a supply-side treatment), but it is a reasonable approximation given the data constraints.
+
+## LPM for Business Ownership (Q4c)
+
+```{r q4c}
+lpm_neg <- feols(neg ~ intl_proxy + age_resp + I(age_resp^2) + emp_resp +
+                   self_resp + une_resp + hhsize,
+                 data = df4, weights = ~facine3, vcov = "hetero")
+ct_neg <- as.data.frame(coeftable(lpm_neg))
+ct_neg$Variable <- rownames(ct_neg)
+
+df4$yhat_neg <- predict(lpm_neg)
+pred_by_wq <- df4 %>%
+  group_by(wealth_q) %>%
+  summarise(mean_pred = weighted.mean(yhat_neg, facine3), .groups = "drop")
+```
+
+```{r q4c-table, results='asis'}
+modelsummary(list("Business ownership (LPM)" = lpm_neg),
+             stars = c('*' = 0.1, '**' = 0.05, '***' = 0.01),
+             gof_map = list(
+               list("raw" = "nobs", "clean" = "N", "fmt" = 0),
+               list("raw" = "r.squared", "clean" = "$R^2$", "fmt" = 3)
+             ),
+             output = "kableExtra",
+             title = "LPM: Probability of owning a business") %>%
+  kable_styling(latex_options = c("hold_position"))
+```
+
+In a linear probability model, the coefficient on `intl_proxy` directly equals the average marginal effect. The estimated AME is `r round(ct_neg$Estimate[ct_neg$Variable == "intl_proxy"], 3)`, which is positive but not statistically significant (p = `r round(ct_neg[ct_neg$Variable == "intl_proxy", "Pr(>|t|)"], 3)`). This suggests that international educational exposure, as proxied here, does not independently predict business ownership once employment status is controlled.
+
+The dominant predictor is self-employment at `r round(ct_neg$Estimate[ct_neg$Variable == "self_resp"] * 100, 1)` pp, which is expected given the near-tautological relationship between self-employment and business ownership. The mean predicted probability of business ownership rises from `r round(pred_by_wq$mean_pred[1] * 100, 1)`% in Q1 to `r round(pred_by_wq$mean_pred[5] * 100, 1)`% in Q5, indicating a strong wealth gradient that operates primarily through employment status and household composition rather than international exposure.
+
+
+# Constructed Variables and Group Comparisons
+
+```{r q5-setup}
+df5 <- eff[eff$imp == 1, ]
+
+df5$fin_share  <- ifelse(df5$totnet > 0, df5$finet / df5$totnet, NA)
+df5$debt_ratio <- ifelse(df5$totnet > 0, df5$deud / df5$totnet, NA)
+
+emp_cols  <- c("emp_resp", paste0("emp_", 2:9))
+self_cols <- c("self_resp", paste0("self_", 2:9))
+n_employed <- rowSums(df5[, emp_cols] == 1, na.rm = TRUE) +
+              rowSums(df5[, self_cols] == 1, na.rm = TRUE)
+df5$non_emp_rate <- 1 - n_employed / df5$hhsize
+df5$non_emp_rate <- pmin(pmax(df5$non_emp_rate, 0), 1)
+
+wq <- function(x, w, p) {
+  keep <- !is.na(x) & !is.na(w)
+  x <- x[keep]; w <- w[keep]
+  ord <- order(x)
+  x <- x[ord]; w <- w[ord]
+  cumw <- cumsum(w) / sum(w)
+  x[which(cumw >= p)[1]]
+}
+```
+
+## Variable Construction (Q5a)
+
+Three variables are constructed from the EFF:
+
+1. **Financial wealth share** = $\texttt{finet} / \texttt{totnet}$, defined only for households with positive net wealth ($\texttt{totnet} > 0$). This measures the fraction of net wealth held in financial assets (deposits, equities, bonds, etc.) as opposed to real assets. Households with zero or negative net wealth are set to NA because the ratio is undefined or meaningless.
+
+2. **Debt-to-net-wealth ratio** = $\texttt{deud} / \texttt{totnet}$, same sample restriction. This captures the household's leverage. Values above 1 indicate that total debt exceeds net wealth   plausible for highly leveraged homeowners with large mortgages.
+
+3. **Non-employment rate** = $1 - (\text{employed} + \text{self-employed}) / \texttt{hhsize}$, where employed and self-employed members are counted across all household members (respondent plus members 2-9). The rate is clamped to $[0, 1]$. This captures the share of household members who are unemployed, retired, or otherwise inactive.
+
+```{r q5a-medians}
+med_fs <- wq(df5$fin_share, df5$facine3, 0.5)
+med_dr <- wq(df5$debt_ratio, df5$facine3, 0.5)
+med_ne <- wq(df5$non_emp_rate, df5$facine3, 0.5)
+```
+
+Weighted medians: financial share = `r round(med_fs, 3)`, debt ratio = `r round(med_dr, 3)`, non-employment rate = `r round(med_ne, 3)`. The zero median debt ratio reflects the fact that the majority of Spanish households have no outstanding debt. The high median non-employment rate (`r round(med_ne, 3)`) reflects Spain's large retired population and the inclusion of non-working household members.
+
+## Group Comparisons (Q5b)
+
+```{r q5b}
+df5$owner_grp <- case_when(
+  df5$own == 1 & df5$own_ot == 1 ~ "owner_many",
+  df5$own == 1 & df5$own_ot == 0 ~ "owner_one",
+  df5$own == 0                   ~ "renter"
+)
+df5$owner_grp <- factor(df5$owner_grp, levels = c("renter", "owner_one", "owner_many"))
+
+stats_fn <- function(data) {
+  data.frame(
+    mean_debt = weighted.mean(data$debt_ratio, data$facine3, na.rm = TRUE),
+    med_debt  = wq(data$debt_ratio, data$facine3, 0.5),
+    p75_debt  = wq(data$debt_ratio, data$facine3, 0.75),
+    mean_fin  = weighted.mean(data$fin_share, data$facine3, na.rm = TRUE),
+    med_fin   = wq(data$fin_share, data$facine3, 0.5),
+    p75_fin   = wq(data$fin_share, data$facine3, 0.75)
+  )
+}
+
+grp_stats <- df5 %>%
+  filter(!is.na(owner_grp), !is.na(debt_ratio)) %>%
+  group_by(owner_grp) %>%
+  group_modify(~ stats_fn(.x))
+
+grp_display <- grp_stats %>%
+  mutate(across(where(is.numeric), ~ round(.x, 3))) %>%
+  rename(
+    Group = owner_grp,
+    `Mean debt` = mean_debt, `Med. debt` = med_debt, `P75 debt` = p75_debt,
+    `Mean fin.` = mean_fin, `Med. fin.` = med_fin, `P75 fin.` = p75_fin
+  )
+```
+
+```{r q5b-table}
+kable(grp_display, booktabs = TRUE,
+      caption = "Debt ratio and financial share by ownership group (weighted)",
+      digits = 3) %>%
+  kable_styling(latex_options = c("hold_position", "scale_down")) %>%
+  add_header_above(c(" " = 1, "Debt-to-wealth" = 3, "Financial share" = 3))
+```
+
+The group comparison reveals stark portfolio differences:
+
+- **Renters** hold nearly all their wealth in financial assets (median financial share = `r round(grp_stats$med_fin[grp_stats$owner_grp == "renter"], 2)`) and have low median debt (0), which is mechanically related to having no real estate to leverage against.
+- **Single-property owners** are the most leveraged group (P75 debt ratio = `r round(grp_stats$p75_debt[grp_stats$owner_grp == "owner_one"], 3)`) and hold the least financial wealth (median = `r round(grp_stats$med_fin[grp_stats$owner_grp == "owner_one"], 3)`), consistent with the "house-poor" phenomenon where the mortgage absorbs most disposable income.
+- **Multi-property owners** have moderate debt ratios (P75 = `r round(grp_stats$p75_debt[grp_stats$owner_grp == "owner_many"], 3)`) and somewhat higher financial shares than single-property owners, indicating more diversified portfolios.
+
+## Correlation Analysis (Q5c)
+
+```{r q5c}
+complete_dn <- df5[!is.na(df5$debt_ratio) & !is.na(df5$non_emp_rate), ]
+w_dn <- complete_dn$facine3
+
+wmean_d <- weighted.mean(complete_dn$debt_ratio, w_dn)
+wmean_n <- weighted.mean(complete_dn$non_emp_rate, w_dn)
+wcov_dn <- sum(w_dn * (complete_dn$debt_ratio - wmean_d) * (complete_dn$non_emp_rate - wmean_n)) / sum(w_dn)
+wsd_d <- sqrt(sum(w_dn * (complete_dn$debt_ratio - wmean_d)^2) / sum(w_dn))
+wsd_n <- sqrt(sum(w_dn * (complete_dn$non_emp_rate - wmean_n)^2) / sum(w_dn))
+wcor_dn <- wcov_dn / (wsd_d * wsd_n)
+ct_dn <- cor.test(complete_dn$debt_ratio, complete_dn$non_emp_rate)
+```
+
+The weighted Pearson correlation between the debt-to-wealth ratio and the household non-employment rate is `r round(wcor_dn, 4)` (unweighted: `r round(ct_dn$estimate, 4)`, p = `r round(ct_dn$p.value, 3)`). The correlation is **negative but not statistically significant** at conventional levels. This means we cannot reject the null of zero correlation between household leverage and non-employment.
+
+Economically, the near-zero (and slightly negative) sign is consistent with the idea that households with high non-employment rates (retirees, single-earner families) tend to have *lower* debt, because they either have already paid off mortgages (retirees) or cannot access credit (unemployed). This contradicts the hypothesis that non-employed households accumulate debt to smooth consumption   instead, they appear to be excluded from credit markets or have already deleveraged. The lack of a positive significant correlation is itself a noteworthy finding that contrasts with the financial fragility narrative often assumed in policy discussions.
+
+## Vulnerability Flag (Q5d)
+
+```{r q5d}
+p75_debt <- wq(df5$debt_ratio, df5$facine3, 0.75)
+df5$vulnerable <- as.integer(df5$debt_ratio > p75_debt & df5$non_emp_rate > 0.5)
+
+vuln_by_grp <- df5 %>%
+  filter(!is.na(vulnerable)) %>%
+  group_by(owner_grp) %>%
+  summarise(
+    vuln_rate = weighted.mean(vulnerable, facine3),
+    n_vuln = sum(vulnerable),
+    n = n(),
+    .groups = "drop"
+  )
+```
+
+```{r q5d-table}
+vuln_display <- vuln_by_grp %>%
+  mutate(vuln_pct = paste0(round(vuln_rate * 100, 1), "%")) %>%
+  select(Group = owner_grp, `Vulnerability rate` = vuln_pct,
+         `N vulnerable` = n_vuln, `N total` = n)
+
+kable(vuln_display, booktabs = TRUE,
+      caption = "Fraction of households with high debt and high non-employment",
+      align = "lrrr") %>%
+  kable_styling(latex_options = c("hold_position"))
+```
+
+Households are flagged as vulnerable if their debt-to-wealth ratio exceeds the 75th weighted percentile (`r round(p75_debt, 3)`) *and* their non-employment rate exceeds 50%. Single-property owners are the most exposed group at `r round(vuln_by_grp$vuln_rate[vuln_by_grp$owner_grp == "owner_one"] * 100, 1)`%, more than twice the rate for renters (`r round(vuln_by_grp$vuln_rate[vuln_by_grp$owner_grp == "renter"] * 100, 1)`%). Multi-property owners fall in between at `r round(vuln_by_grp$vuln_rate[vuln_by_grp$owner_grp == "owner_many"] * 100, 1)`%.
+
+This pattern aligns with the financial fragility literature: households whose wealth is concentrated in a single illiquid asset (the family home), financed with mortgage debt, and dependent on few earners are disproportionately vulnerable to income shocks. The fact that single-property owners have both the highest leverage (Q5b) and the highest vulnerability underscores the policy relevance of mortgage regulation and labor market resilience for middle-class homeowners.
+
+
+# Mortgage Holder Regressions
+
+```{r q6-setup}
+df6 <- eff[eff$imp == 1 & eff$own == 1, ]
+
+df6$mortgage_holder <- as.integer((df6$own == 1 | df6$own_ot == 1) &
+                                    !is.na(df6$deudre) & df6$deudre > 0)
+df6$fin_share <- ifelse(df6$totnet > 0, df6$finet / df6$totnet, NA)
+
+n_employed6 <- rowSums(df6[, emp_cols] == 1, na.rm = TRUE) +
+               rowSums(df6[, self_cols] == 1, na.rm = TRUE)
+df6$non_emp_rate <- pmin(pmax(1 - n_employed6 / df6$hhsize, 0), 1)
+
+df6$educ_cat <- case_when(
+  df6$educ_resp <= 4                            ~ "low",
+  df6$educ_resp <= 8                            ~ "medium",
+  df6$educ_resp %in% c(9, 11, 12, 1001, 1002)  ~ "high"
+)
+df6$educ_cat <- factor(df6$educ_cat, levels = c("low", "medium", "high"))
+df6$wealth_q <- wq_fn(df6$totnet, df6$facine3)
+```
+
+## Variable Definition (Q6a)
+
+A household is classified as a mortgage holder if it satisfies two conditions: (1) it owns real estate ($\texttt{own} = 1$ or $\texttt{own\_ot} = 1$), and (2) it has strictly positive real estate debt ($\texttt{deudre} > 0$). Since the sample is already restricted to homeowners ($\texttt{own} = 1$), condition (1) is automatically satisfied. The mortgage indicator takes value 1 for `r sum(df6$mortgage_holder, na.rm=TRUE)` of `r nrow(df6)` homeowners (`r round(mean(df6$mortgage_holder, na.rm=TRUE) * 100, 1)`%).
+
+## Regression Results (Q6b)
+
+```{r q6b}
+m1 <- feols(mortgage_holder ~ non_emp_rate + fin_share + age_resp +
+              I(age_resp^2) + educ_cat + hhsize,
+            data = df6, weights = ~facine3, vcov = "hetero")
+
+m2 <- feols(mortgage_holder ~ non_emp_rate + fin_share + age_resp +
+              I(age_resp^2) + educ_cat + hhsize + wealth_q,
+            data = df6, weights = ~facine3, vcov = "hetero")
+
+m3 <- feols(mortgage_holder ~ non_emp_rate + fin_share + age_resp +
+              I(age_resp^2) + educ_cat + hhsize + wealth_q +
+              non_emp_rate:fin_share,
+            data = df6, weights = ~facine3, vcov = "hetero")
+
+ct1 <- as.data.frame(coeftable(m1)); ct1$Variable <- rownames(ct1)
+ct2 <- as.data.frame(coeftable(m2)); ct2$Variable <- rownames(ct2)
+ct3 <- as.data.frame(coeftable(m3)); ct3$Variable <- rownames(ct3)
+```
+
+## LaTeX Regression Table (Q6c)
+
+```{r q6c-table, results='asis'}
+cm <- c(
+  "non_emp_rate"            = "Non-employment rate",
+  "fin_share"               = "Financial asset share",
+  "non_emp_rate:fin_share"  = "Non-emp. $\\times$ Fin. share",
+  "age_resp"                = "Age",
+  "I(age_resp^2)"           = "Age$^2$",
+  "educ_catmedium"          = "Education: medium",
+  "educ_cathigh"            = "Education: high",
+  "hhsize"                  = "Household size",
+  "wealth_qQ2"              = "Wealth Q2",
+  "wealth_qQ3"              = "Wealth Q3",
+  "wealth_qQ4"              = "Wealth Q4",
+  "wealth_qQ5"              = "Wealth Q5"
+)
+
+gof_list <- list(
+  list("raw" = "nobs",      "clean" = "N",     "fmt" = 0),
+  list("raw" = "r.squared", "clean" = "$R^2$", "fmt" = 3)
+)
+
+modelsummary(list("(1)" = m1, "(2)" = m2, "(3)" = m3),
+             stars = c('*' = 0.1, '**' = 0.05, '***' = 0.01),
+             coef_map = cm,
+             gof_map = gof_list,
+             escape = FALSE,
+             notes = "Weighted by facine3. Heteroskedasticity-robust SEs in parentheses. Sample: homeowners (own = 1).",
+             output = "kableExtra",
+             title = "LPM: Probability of being a mortgage holder among homeowners") %>%
+  kable_styling(latex_options = c("hold_position", "scale_down"))
+```
+
+**Interpretation of key coefficients:**
+
+- **Non-employment rate**: The largest substantive effect, at `r round(ct1$Estimate[ct1$Variable == "non_emp_rate"] * 100, 1)` pp in the baseline (Col 1) and `r round(ct2$Estimate[ct2$Variable == "non_emp_rate"] * 100, 1)` pp with wealth controls (Col 2). Households with fewer earners are significantly less likely to hold a mortgage. The negative sign is consistent with both supply-side constraints (banks require income for mortgage approval) and demand-side effects (non-working households have lower housing demand). The stability of this coefficient across specifications indicates that the non-employment effect operates independently of wealth.
+
+- **Financial asset share**: Insignificant in the baseline (Col 1, p = `r round(ct1[ct1$Variable == "fin_share", "Pr(>|t|)"], 3)`) but becomes significant once wealth quintiles are added (Col 2, `r round(ct2$Estimate[ct2$Variable == "fin_share"] * 100, 1)` pp, p < 0.01). This sign change is intuitive: unconditionally, financially liquid households may or may not have mortgages, but *conditional on the same wealth level*, those with more financial assets are slightly more likely to hold mortgage debt, possibly because they maintain liquid reserves as a buffer alongside their mortgage.
+
+- **Wealth quintiles** (Col 2-3): All negative and monotonically increasing in magnitude relative to Q1. Q5 homeowners are `r round(ct2$Estimate[ct2$Variable == "wealth_qQ5"] * 100, 1)` pp less likely to hold a mortgage than Q1 homeowners. This makes economic sense: wealthier households can purchase outright or pay down mortgages faster. The $R^2$ increases from `r round(fixest::r2(m1)["r2"], 3)` to `r round(fixest::r2(m2)["r2"], 3)` when quintiles are added, indicating meaningful additional explanatory power.
+
+- **Interaction term** (Col 3): The non-employment $\times$ financial share interaction is `r round(ct3$Estimate[ct3$Variable == "non_emp_rate:fin_share"], 3)` with p = `r round(ct3[ct3$Variable == "non_emp_rate:fin_share", "Pr(>|t|)"], 3)`, indicating no statistically meaningful interaction. The labor market and portfolio composition channels operate independently in determining mortgage holding.
+
+- **Education**: High education adds `r round(ct2$Estimate[ct2$Variable == "educ_cathigh"] * 100, 1)` pp (Col 2), reflecting both greater housing demand and superior access to credit markets for college-educated households.
+
+- **Age**: Negative linear coefficient with positive quadratic, implying that mortgage holding declines with age (as mortgages are paid off) but at a decreasing rate.
+
+The most noteworthy finding is that wealth quintiles absorb a substantial share of variation while leaving the non-employment coefficient virtually unchanged, suggesting that labor market status and wealth represent distinct dimensions of mortgage holding capacity. Policy interventions targeting either dimension would operate through separate channels.

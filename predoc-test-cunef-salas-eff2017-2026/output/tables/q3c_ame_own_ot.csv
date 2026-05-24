@@ -1,0 +1,9 @@
+"term","contrast","estimate","std.error","statistic","p.value","s.value","conf.low","conf.high"
+"age_resp","dY/dX",0,NA,NA,NA,NA,NA,NA
+"educ_cat","high - low",0.104260964570001,NA,NA,NA,NA,NA,NA
+"educ_cat","medium - low",0.0710160761666926,NA,NA,NA,NA,NA,NA
+"emp_resp","1 - 0",-0.0321523333853596,NA,NA,NA,NA,NA,NA
+"hhsize","dY/dX",0,NA,NA,NA,NA,NA,NA
+"log_hhinc","dY/dX",0,NA,NA,NA,NA,NA,NA
+"self_resp","1 - 0",-0.0491649758077109,NA,NA,NA,NA,NA,NA
+"une_resp","1 - 0",-0.12751677852349,NA,NA,NA,NA,NA,NA

@@ -1,0 +1,5 @@
+toshare/
+.Rhistory
+.DS_Store
+report.log
+*.Rproj.user/
